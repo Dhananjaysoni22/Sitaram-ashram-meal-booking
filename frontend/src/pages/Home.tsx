@@ -138,8 +138,8 @@ export default function Home() {
     doc.text(menuText, 20, 110);
 
     const safeName = (booking.sponsorName || "Unknown").replace(/[^a-zA-Z0-9]/g, '_');
-    const formattedDate = format(new Date(booking.date), "dd-MMM-yyyy");
-    doc.save(`Kitchen-Slip-${safeName}-${booking.mealType}-${formattedDate}.pdf`);
+    const fileDate = format(new Date(booking.date), "dd-MMM-yyyy");
+    doc.save(`Kitchen-Slip-${safeName}-${booking.mealType}-${fileDate}.pdf`);
   };
 
   const meals = [
