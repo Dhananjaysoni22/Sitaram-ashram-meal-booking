@@ -34,21 +34,16 @@ export default function CalendarView() {
   const localeToUse = isHindi ? hi : enUS;
 
   // Helper to determine dot color for a specific meal on a specific day
-  const getMealDotColor = (date: Date, baseMealType: string) => {
-    const dayBookings = bookings.filter(
+  const getMealDotColor = (date: Date, exactMealType: string) => {
+    const booking = bookings.find(
       (b) =>
-        b.mealType.includes(baseMealType) &&
+        b.mealType === exactMealType &&
         new Date(b.date).toDateString() === date.toDateString() &&
         b.status !== "CANCELLED"
     );
 
-    if (dayBookings.length === 0) return "bg-gray-300"; // Available
-    
-    // If ANY of the bookings for this meal type (ground or first floor) are still pending/booked, show red.
-    // Otherwise if all are completed, show green.
-    const allCompleted = dayBookings.every(b => b.status === "COMPLETED");
-    if (allCompleted) return "bg-green-500"; // Completed
-    
+    if (!booking) return "bg-gray-300"; // Available
+    if (booking.status === "COMPLETED") return "bg-green-500"; // Completed
     return "bg-red-400"; // Booked
   };
 
@@ -90,7 +85,7 @@ export default function CalendarView() {
         {/* Days Grid */}
           <div className="grid grid-cols-7 gap-1 sm:gap-2 lg:gap-3">
             {paddingDays.map((_, i) => (
-               <div key={`pad-${i}`} className="min-h-[70px] sm:min-h-[80px] lg:min-h-[90px] xl:min-h-[100px] rounded-xl bg-gray-50/50" />
+               <div key={`pad-${i}`} className="min-h-[70px] sm:min-h-[110px] lg:min-h-[120px] xl:min-h-[130px] rounded-xl bg-gray-50/50" />
             ))}
           
           {days.map(day => {
@@ -102,7 +97,7 @@ export default function CalendarView() {
             return (
               <div 
                 key={day.toString()} 
-                className={`flex flex-col p-1 sm:p-2 lg:p-3 min-h-[70px] sm:min-h-[80px] lg:min-h-[90px] xl:min-h-[100px] border rounded-xl transition-colors relative overflow-hidden ${
+                className={`flex flex-col p-1 sm:p-2 lg:p-3 min-h-[70px] sm:min-h-[110px] lg:min-h-[120px] xl:min-h-[130px] border rounded-xl transition-colors relative overflow-hidden ${
                   isCurrentDay 
                     ? 'border-[#a36329] bg-[#fef7e7] shadow-inner' 
                     : hasFestival
@@ -127,20 +122,28 @@ export default function CalendarView() {
                 )}
                 
                 {/* Visual Indicators for Meals (B, R, S) */}
-                <div className="flex flex-row sm:flex-col justify-center sm:justify-start gap-1 sm:gap-0.5 mt-auto pb-1 sm:pb-0">
-                  <div className="flex items-center sm:gap-1" title={t('Balbhog')}>
-                    <div className={`w-2 h-2 sm:w-2 sm:h-2 rounded-full ${getMealDotColor(day, 'BALBHOG')}`}></div>
-                    <span className="text-[10px] text-gray-500 hidden sm:block">{t('Balbhog')}</span>
+                  <div className="flex flex-wrap sm:flex-col justify-center sm:justify-start gap-1 sm:gap-0.5 mt-auto pb-1 sm:pb-0">
+                    <div className="flex items-center sm:gap-1" title={t('Balbhog')}>
+                      <div className={`w-2 h-2 sm:w-2 sm:h-2 rounded-full shrink-0 ${getMealDotColor(day, 'BALBHOG')}`}></div>
+                      <span className="text-[9px] text-gray-500 hidden sm:block truncate">{t('Balbhog')}</span>
+                    </div>
+                    <div className="flex items-center sm:gap-1" title={t('Rajbhog')}>
+                      <div className={`w-2 h-2 sm:w-2 sm:h-2 rounded-full shrink-0 ${getMealDotColor(day, 'RAJBHOG')}`}></div>
+                      <span className="text-[9px] text-gray-500 hidden sm:block truncate">{t('Rajbhog')}</span>
+                    </div>
+                    <div className="flex items-center sm:gap-1" title={t('Sayankalin')}>
+                      <div className={`w-2 h-2 sm:w-2 sm:h-2 rounded-full shrink-0 ${getMealDotColor(day, 'SAYANKALIN')}`}></div>
+                      <span className="text-[9px] text-gray-500 hidden sm:block truncate">{t('Sayankalin')}</span>
+                    </div>
+                    <div className="flex items-center sm:gap-1" title={t('RajbhogFF')}>
+                      <div className={`w-2 h-2 sm:w-2 sm:h-2 rounded-full shrink-0 ${getMealDotColor(day, 'RAJBHOG_FIRST_FLOOR')}`}></div>
+                      <span className="text-[9px] text-gray-500 hidden sm:block truncate">{t('RajbhogFF')}</span>
+                    </div>
+                    <div className="flex items-center sm:gap-1" title={t('SayankalinFF')}>
+                      <div className={`w-2 h-2 sm:w-2 sm:h-2 rounded-full shrink-0 ${getMealDotColor(day, 'SAYANKALIN_FIRST_FLOOR')}`}></div>
+                      <span className="text-[9px] text-gray-500 hidden sm:block truncate">{t('SayankalinFF')}</span>
+                    </div>
                   </div>
-                  <div className="flex items-center sm:gap-1" title={t('Rajbhog')}>
-                    <div className={`w-2 h-2 sm:w-2 sm:h-2 rounded-full ${getMealDotColor(day, 'RAJBHOG')}`}></div>
-                    <span className="text-[10px] text-gray-500 hidden sm:block">{t('Rajbhog')}</span>
-                  </div>
-                  <div className="flex items-center sm:gap-1" title={t('Sayankalin')}>
-                    <div className={`w-2 h-2 sm:w-2 sm:h-2 rounded-full ${getMealDotColor(day, 'SAYANKALIN')}`}></div>
-                    <span className="text-[10px] text-gray-500 hidden sm:block">{t('Sayankalin')}</span>
-                  </div>
-                </div>
               </div>
             );
           })}
