@@ -91,9 +91,25 @@ export default function Home() {
       80,
     );
 
+    let currentY = 95;
+
+    const extras = [];
+    if (booking.valetParking) extras.push(`Valet: ${booking.valetParking}`);
+    if (booking.waiters) extras.push(`Waiters: ${booking.waiters}`);
+    if (booking.coolers) extras.push(`Coolers: ${booking.coolers}`);
+    if (booking.guards) extras.push(`Guards: ${booking.guards}`);
+    if (booking.masalchis) extras.push(`Masalchis: ${booking.masalchis}`);
+
+    if (extras.length > 0) {
+      doc.setFont("helvetica", "bold");
+      doc.text(`Extras: ${extras.join("  |  ")}`, 20, currentY);
+      currentY += 15;
+    }
+
     // Menu / Instructions
     doc.setFont("helvetica", "bold");
-    doc.text("Meal Menu / Special Instructions:", 20, 100);
+    doc.text("Meal Menu / Special Instructions:", 20, currentY);
+    currentY += 10;
 
     doc.setFont("helvetica", "normal");
     const stripHtml = (html: string) => {
@@ -138,7 +154,7 @@ export default function Home() {
       stripHtml(booking.specialInstructions || "") || "No special instructions provided.",
       170,
     );
-    doc.text(menuText, 20, 110);
+    doc.text(menuText, 20, currentY);
 
     const safeName = (booking.sponsorName || "Unknown").replace(/[^a-zA-Z0-9]/g, '_');
     const fileDate = format(new Date(booking.date), "dd-MMM-yyyy");
