@@ -1,5 +1,5 @@
 import React from "react";
-import { Outlet, Link, useLocation } from "react-router-dom";
+import { Outlet, Link, useLocation, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
   Home,
@@ -13,9 +13,11 @@ import {
   Settings,
 } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
+import { useEffect } from "react";
 
 export default function Layout() {
   const location = useLocation();
+  const navigate = useNavigate();
   const { t, i18n } = useTranslation();
   const { user, logout, allowedScreens } = useAuth();
 
@@ -36,6 +38,17 @@ export default function Layout() {
   ];
 
   const navItems = allNavItems.filter(item => allowedScreens.includes(item.id));
+
+  useEffect(() => {
+    if (allowedScreens.length > 0) {
+      const currentScreen = allNavItems.find(item => item.path === location.pathname);
+      if (currentScreen && !allowedScreens.includes(currentScreen.id)) {
+        if (navItems.length > 0) {
+          navigate(navItems[0].path, { replace: true });
+        }
+      }
+    }
+  }, [allowedScreens, location.pathname]);
 
   return (
     <div className="flex flex-col h-screen bg-[#fdfbf6]">

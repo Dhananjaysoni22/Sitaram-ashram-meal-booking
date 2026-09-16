@@ -1,0 +1,25 @@
+export const customFestivals: Record<string, string[]> = {
+  "2026-01-14": ["Makar Sankranti"],
+  "2026-02-14": ["Vasant Panchami"],
+  "2026-03-03": ["Maha Shivaratri"],
+  "2026-03-23": ["Holi"],
+  "2026-04-13": ["Baisakhi"],
+  "2026-04-21": ["Rama Navami"],
+  "2026-05-10": ["Akshaya Tritiya"],
+  "2026-08-27": ["Raksha Bandhan"],
+  "2026-09-04": ["Krishna Janmashtami"],
+  "2026-09-15": ["Ganesh Chaturthi"],
+  "2026-10-18": ["Dussehra"],
+  "2026-11-08": ["Diwali"],
+  "2026-11-24": ["Tulsi Vivah"],
+  // 2027 samples
+  "2027-01-14": ["Makar Sankranti"],
+  "2027-02-11": ["Vasant Panchami"],
+  "2027-03-08": ["Maha Shivaratri"],
+  "2027-03-22": ["Holi"],
+  "2027-04-11": ["Rama Navami"],
+  "2027-08-16": ["Raksha Bandhan"],
+  "2027-08-24": ["Krishna Janmashtami"],
+  "2027-10-09": ["Dussehra"],
+  "2027-10-29": ["Diwali"]
+};
