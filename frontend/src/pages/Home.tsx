@@ -94,9 +94,42 @@ export default function Home() {
 
     doc.setFont("helvetica", "normal");
     const stripHtml = (html: string) => {
-      const tmp = document.createElement("DIV");
-      tmp.innerHTML = html.replace(/<li[^>]*>/gi, "<li>• ");
-      return (tmp.innerText || tmp.textContent || "").replace(/\n\n+/g, "\n").trim();
+      const tmp = document.createElement("div");
+      tmp.style.position = "absolute";
+      tmp.style.left = "-9999px";
+      tmp.style.width = "1000px";
+      tmp.innerHTML = html;
+      document.body.appendChild(tmp);
+      
+      // Manually inject numbers for ordered lists (bypasses Tailwind list resets)
+      const ols = tmp.querySelectorAll('ol');
+      ols.forEach(ol => {
+        const lis = Array.from(ol.children).filter(el => el.tagName === 'LI');
+        lis.forEach((li, index) => {
+          li.prepend(document.createTextNode(`${index + 1}. `));
+        });
+      });
+
+      // Manually inject bullets for unordered lists
+      const uls = tmp.querySelectorAll('ul');
+      uls.forEach(ul => {
+        const lis = Array.from(ul.children).filter(el => el.tagName === 'LI');
+        lis.forEach(li => {
+          li.prepend(document.createTextNode(`• `));
+        });
+      });
+
+      // Also force block elements to have newlines in case innerText misses some
+      const blocks = tmp.querySelectorAll('p, div, br, li');
+      blocks.forEach(block => {
+        if (block.tagName === 'BR') {
+           block.replaceWith(document.createTextNode('\n'));
+        }
+      });
+
+      let text = tmp.innerText || "";
+      document.body.removeChild(tmp);
+      return text.replace(/\n\n+/g, "\n").trim();
     };
     const menuText = doc.splitTextToSize(
       stripHtml(booking.specialInstructions || "") || "No special instructions provided.",
@@ -104,9 +137,9 @@ export default function Home() {
     );
     doc.text(menuText, 20, 110);
 
-    doc.save(
-      `Kitchen-Slip-${format(new Date(booking.date), "yyyy-MM-dd")}-${booking.mealType}.pdf`,
-    );
+    const safeName = (booking.sponsorName || "Unknown").replace(/[^a-zA-Z0-9]/g, '_');
+    const formattedDate = format(new Date(booking.date), "dd-MMM-yyyy");
+    doc.save(`Kitchen-Slip-${safeName}-${booking.mealType}-${formattedDate}.pdf`);
   };
 
   const meals = [
