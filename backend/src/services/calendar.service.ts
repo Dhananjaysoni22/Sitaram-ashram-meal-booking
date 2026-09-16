@@ -1,5 +1,4 @@
 import { PrismaClient } from "@prisma/client";
-import { format } from "date-fns";
 
 const prisma = new PrismaClient();
 
@@ -22,7 +21,10 @@ export const getFestivalsForMonthService = async (year: number, month: number) =
   const grouped: Record<string, string[]> = {};
   
   for (const f of festivals) {
-    const dateStr = format(f.date, "yyyy-MM-dd");
+    const y = f.date.getFullYear();
+    const m = String(f.date.getMonth() + 1).padStart(2, "0");
+    const d = String(f.date.getDate()).padStart(2, "0");
+    const dateStr = `${y}-${m}-${d}`;
     if (!grouped[dateStr]) grouped[dateStr] = [];
     grouped[dateStr].push(f.name);
   }
