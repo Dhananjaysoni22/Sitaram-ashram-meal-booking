@@ -10,7 +10,7 @@ import ViewBookingModal from "../components/ViewBookingModal";
 import { useAuth } from "../context/AuthContext";
 
 export default function Home() {
-  const { user } = useAuth();
+  const { user, allowedScreens } = useAuth();
   const { t, i18n } = useTranslation();
   const [bookings, setBookings] = useState<any[]>([]);
   const [editingBooking, setEditingBooking] = useState<any>(null);
@@ -335,7 +335,7 @@ export default function Home() {
                     <p className="text-[15px] font-medium text-gray-700 mb-4">
                       {t("ServiceAvailableDesc")}
                     </p>
-                    {canEditBooking && (
+                    {canEditBooking && allowedScreens.includes("NEW_BOOKING") && (
                       <button
                         className="px-6 py-2.5 bg-[#a36329] hover:bg-[#8b5321] text-white rounded-xl text-sm font-bold transition shadow-sm"
                         onClick={() => navigate("/booking/new")}
