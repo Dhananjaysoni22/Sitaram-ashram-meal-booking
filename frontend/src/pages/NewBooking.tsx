@@ -5,8 +5,6 @@ import { newBooking, getAllBookings, type Booking } from "../api/booking.api";
 import { getOccasions } from "../api/setup.api";
 import { getDateFestivals } from "../api/calendar.api";
 import { Calendar, Users, MapPin, Phone, User, FileText, CheckCircle, IndianRupee } from "lucide-react";
-import { hi, enUS } from "date-fns/locale";
-import { getMonthlyFestivals } from "../api/calendar.api";
 import Editor from "react-simple-wysiwyg";
 
 export default function NewBooking() {

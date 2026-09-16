@@ -195,7 +195,7 @@ export default function Home() {
                     {meal.name}
                   </h3>
                   <span
-                    className={`px-3 py-1 rounded-full text-xs font-bold ${
+                    className={`px-3 py-1 rounded-2xl text-xs font-bold text-center inline-block min-w-[70px] ${
                       booking
                         ? booking.status === "COMPLETED"
                           ? "bg-gray-100 text-gray-600"
