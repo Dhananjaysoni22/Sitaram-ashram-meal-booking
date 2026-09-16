@@ -1,0 +1,167 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum MealType {
+  BALBHOG
+  RAJBHOG
+  SAYANKALIN
+  RAJBHOG_FIRST_FLOOR
+  SAYANKALIN_FIRST_FLOOR
+}
+
+enum BookingStatus {
+  AVAILABLE
+  PENDING_CONFIRMATION
+  BOOKED
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+model User {
+  id           String    @id @default(uuid())
+  name         String
+  username     String    @unique
+  email        String?   @unique
+  passwordHash String
+  role         String    @default("BOOKING_COORDINATOR")
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  
+  bookingsCompleted Booking[] @relation("CompletedByRelation")
+  bookingsCreated   Booking[] @relation("CreatedByRelation")
+  bookingsUpdated   Booking[] @relation("UpdatedByRelation")
+}
+
+model Booking {
+  id                  String        @id @default(uuid())
+  date                DateTime
+  mealType            MealType
+  status              BookingStatus @default(BOOKED)
+  sponsorName         String
+  mobileNumber        String
+  cityLocation        String
+  familyName          String?
+  occasion            String?
+  monksCount          Int           @default(0)
+  guestsCount         Int           @default(0)
+  totalCount          Int           @default(0)
+  specialInstructions String?
+  coSponsors          Json? // Stores array of { name: string, ... }
+  completedAt         DateTime?
+
+  completedBy     String? // User ID of coordinator who completed it
+  completedByUser User?   @relation("CompletedByRelation", fields: [completedBy], references: [id])
+
+  createdById     String?
+  createdByUser   User?   @relation("CreatedByRelation", fields: [createdById], references: [id])
+
+  updatedById     String?
+  updatedByUser   User?   @relation("UpdatedByRelation", fields: [updatedById], references: [id])
+
+  advanceAmount       Int?
+  costPerHead         Int?
+  
+  // Extra Services (Quantities)
+  valetParking        Int?      @default(0)
+  waiters             Int?      @default(0)
+  coolers             Int?      @default(0)
+  guards              Int?      @default(0)
+  masalchis           Int?      @default(0)
+  
+  // Financial
+  totalPayment        Int?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum WageType {
+  DAILY
+  MONTHLY
+}
+
+model Worker {
+  id           String       @id @default(uuid())
+  name         String
+  mobileNumber String?
+  wageType     WageType
+  wageRate     Float
+  isActive     Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+  
+  category     String?
+
+  attendances  Attendance[]
+  payments     Payment[]
+}
+
+model SetupOccasion {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model SetupWorkerCategory {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model SetupRole {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+}
+
+model Attendance {
+  id          String    @id @default(uuid())
+  workerId    String
+  date        DateTime
+  isPresent   Boolean   @default(true)
+  entryTime   DateTime?
+  exitTime    DateTime?
+  totalHours  Float?
+  
+  worker      Worker    @relation(fields: [workerId], references: [id])
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@unique([workerId, date])
+}
+
+model Payment {
+  id          String    @id @default(uuid())
+  workerId    String
+  amount      Float
+  paymentDate DateTime
+  notes       String?
+  
+  worker      Worker    @relation(fields: [workerId], references: [id])
+
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model RolePermission {
+  id        String   @id @default(uuid())
+  role      String
+  screen    String
+  
+  createdAt DateTime @default(now())
+
+  @@unique([role, screen])
+}
