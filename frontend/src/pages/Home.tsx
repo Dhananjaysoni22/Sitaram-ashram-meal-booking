@@ -7,14 +7,17 @@ import { getAllBookings, updateBookingStatus } from "../api/booking.api";
 import EditBookingModal from "../components/EditBookingModal";
 import { useNavigate } from "react-router-dom";
 import ViewBookingModal from "../components/ViewBookingModal";
+import { useAuth } from "../context/AuthContext";
 
 export default function Home() {
+  const { user } = useAuth();
   const { t, i18n } = useTranslation();
   const [bookings, setBookings] = useState<any[]>([]);
   const [editingBooking, setEditingBooking] = useState<any>(null);
   const [viewBooking, setViewBooking] = useState<any>(null);
   const today = new Date();
   const navigate = useNavigate();
+  const canEditBooking = user?.role === 'SUPER_ADMIN' || user?.role === 'BOOKING_COORDINATOR';
 
   const isHindi = i18n.language === "hi";
   const localeToUse = isHindi ? hi : enUS;
@@ -265,7 +268,7 @@ export default function Home() {
                       )}
                     </div>
 
-                    {booking.status !== "COMPLETED" && (
+                    {canEditBooking && booking.status !== "COMPLETED" && (
                       <div className="flex flex-col sm:flex-row gap-3 mt-4">
                         <button
                           className="flex-1 py-2 bg-green-600 hover:bg-green-700 text-white rounded-xl text-sm font-bold transition shadow-sm"
@@ -316,12 +319,14 @@ export default function Home() {
                     <p className="text-[15px] font-medium text-gray-700 mb-4">
                       {t("ServiceAvailableDesc")}
                     </p>
-                    <button
-                      className="px-6 py-2.5 bg-[#a36329] hover:bg-[#8b5321] text-white rounded-xl text-sm font-bold transition shadow-sm"
-                      onClick={() => navigate("/booking/new")}
-                    >
-                      {t("BookService")}
-                    </button>
+                    {canEditBooking && (
+                      <button
+                        className="px-6 py-2.5 bg-[#a36329] hover:bg-[#8b5321] text-white rounded-xl text-sm font-bold transition shadow-sm"
+                        onClick={() => navigate("/booking/new")}
+                      >
+                        {t("BookService")}
+                      </button>
+                    )}
                   </div>
                 )}
               </div>
@@ -387,20 +392,24 @@ export default function Home() {
                   )}
                 </div>
 
-                <div className="flex flex-col gap-2 mt-auto">
-                  <button
-                    onClick={() => setEditingBooking(b)}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 rounded-lg text-xs font-bold transition"
-                  >
-                    {t("Edit")}
-                  </button>
-                  <button
-                    className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl text-sm font-bold transition shadow-sm"
-                    onClick={() => handleCancel(b.id)}
-                  >
-                    {t("CancelBooking")}
-                  </button>
-                  <button
+                  <div className="flex flex-col gap-2 mt-auto">
+                    {canEditBooking && b.status !== "COMPLETED" && (
+                      <>
+                        <button
+                          onClick={() => setEditingBooking(b)}
+                          className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 rounded-lg text-xs font-bold transition"
+                        >
+                          {t("Edit")}
+                        </button>
+                        <button
+                          className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl text-sm font-bold transition shadow-sm"
+                          onClick={() => handleCancel(b.id)}
+                        >
+                          {t("CancelBooking")}
+                        </button>
+                      </>
+                    )}
+                    <button
                     onClick={() => generatePDF(b)}
                     className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#fdf5e6] hover:bg-[#f5e3cd] text-[#99582a] border border-[#f5e3cd] rounded-lg text-xs font-bold transition mt-auto"
                   >
