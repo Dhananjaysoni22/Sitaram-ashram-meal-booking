@@ -11,20 +11,24 @@ import {
   createRole,
   deleteRole
 } from "../api/setup.api";
-import { Plus, Trash2, Settings, Users, Star, Shield, UserCog } from "lucide-react";
+import { getAllFestivals, createFestival, deleteFestival } from "../api/calendar.api";
+import { format } from "date-fns";
+import { Plus, Trash2, Settings, Users, Star, Shield, UserCog, Calendar } from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import PermissionsMatrix from "../components/PermissionsMatrix";
 
 export default function Setup() {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<"occasions" | "categories" | "roles" | "permissions">("permissions");
+  const [activeTab, setActiveTab] = useState<"occasions" | "categories" | "roles" | "permissions" | "festivals">("permissions");
 
   const [occasions, setOccasions] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [roles, setRoles] = useState<any[]>([]);
+  const [festivals, setFestivals] = useState<any[]>([]);
   
   const [newName, setNewName] = useState("");
+  const [newDate, setNewDate] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -34,10 +38,16 @@ export default function Setup() {
 
   const fetchData = async () => {
     try {
-      const [occRes, catRes, roleRes] = await Promise.all([getOccasions(), getWorkerCategories(), getRoles()]);
+      const [occRes, catRes, roleRes, festRes] = await Promise.all([
+        getOccasions(), 
+        getWorkerCategories(), 
+        getRoles(),
+        getAllFestivals()
+      ]);
       setOccasions(occRes.data.data);
       setCategories(catRes.data.data);
       setRoles(roleRes.data.data);
+      setFestivals(festRes.data.data);
     } catch (e) {
       console.error(e);
     }
@@ -46,6 +56,7 @@ export default function Setup() {
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newName.trim()) return;
+    if (activeTab === "festivals" && !newDate) return;
     
     setLoading(true);
     setError("");
@@ -56,8 +67,11 @@ export default function Setup() {
         await createWorkerCategory(newName);
       } else if (activeTab === "roles") {
         await createRole(newName);
+      } else if (activeTab === "festivals") {
+        await createFestival({ name: newName, date: newDate });
       }
       setNewName("");
+      setNewDate("");
       fetchData();
     } catch (e: any) {
       setError(e.response?.data?.error || "Error creating record");
@@ -74,6 +88,8 @@ export default function Setup() {
         await deleteWorkerCategory(id);
       } else if (activeTab === "roles") {
         await deleteRole(id);
+      } else if (activeTab === "festivals") {
+        await deleteFestival(id);
       }
       fetchData();
     } catch (e: any) {
@@ -85,7 +101,7 @@ export default function Setup() {
     return <div className="p-8 text-center text-red-500 font-bold text-xl">Not Authorized</div>;
   }
 
-  const currentList = activeTab === "occasions" ? occasions : activeTab === "categories" ? categories : roles;
+  const currentList = activeTab === "occasions" ? occasions : activeTab === "categories" ? categories : activeTab === "festivals" ? festivals : roles;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -101,6 +117,16 @@ export default function Setup() {
         
         {/* Tabs */}
         <div className="flex flex-col sm:flex-row border-b border-[#ece4da]">
+          <button
+            onClick={() => { setActiveTab("festivals"); setError(""); setNewName(""); setNewDate(""); }}
+            className={`flex-1 py-4 px-4 font-bold text-sm flex items-center justify-center transition-colors ${
+              activeTab === "festivals"
+                ? "bg-[#fef7e7] text-[#99582a] border-b-2 border-[#99582a]"
+                : "text-gray-500 hover:bg-gray-50"
+            }`}
+          >
+            <Calendar size={16} className="mr-2" /> Calendar Festivals
+          </button>
           <button
             onClick={() => { setActiveTab("occasions"); setError(""); setNewName(""); }}
             className={`flex-1 py-4 px-4 font-bold text-sm flex items-center justify-center transition-colors ${
@@ -150,18 +176,31 @@ export default function Setup() {
         ) : (
           <div className="p-6 md:p-8">
             {/* Add Form */}
-            <form onSubmit={handleCreate} className="flex gap-4 mb-8">
+            <form onSubmit={handleCreate} className="flex flex-col sm:flex-row gap-4 mb-8">
+              {activeTab === "festivals" && (
+                <div className="sm:w-48">
+                  <input
+                    type="date"
+                    value={newDate}
+                    onChange={(e) => setNewDate(e.target.value)}
+                    className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#99582a] outline-none font-bold text-gray-800"
+                    required
+                  />
+                </div>
+              )}
               <div className="flex-1">
                 <input
                   type="text"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                   placeholder={
-                    activeTab === "occasions" 
-                      ? t("AddOccasionHolder") 
-                      : activeTab === "categories"
-                        ? t("AddCategoryHolder")
-                        : "Enter role name (e.g. KITCHEN_STAFF)"
+                    activeTab === "festivals"
+                      ? "Enter festival name (e.g. Diwali)"
+                      : activeTab === "occasions" 
+                        ? t("AddOccasionHolder") 
+                        : activeTab === "categories"
+                          ? t("AddCategoryHolder")
+                          : "Enter role name (e.g. KITCHEN_STAFF)"
                   }
                   className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#99582a] outline-none font-bold text-gray-800"
                 />
@@ -169,7 +208,7 @@ export default function Setup() {
               </div>
               <button
                 type="submit"
-                disabled={loading || !newName.trim()}
+                disabled={loading || !newName.trim() || (activeTab === "festivals" && !newDate)}
                 className="px-6 py-3 bg-[#99582a] text-white font-bold rounded-xl shadow-sm hover:bg-[#78431e] disabled:opacity-50 transition-colors flex items-center whitespace-nowrap h-[52px]"
               >
                 <Plus size={18} className="mr-1" /> {t("Add")}
@@ -179,7 +218,7 @@ export default function Setup() {
             {/* List */}
             <div>
               <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">
-                {activeTab === "occasions" ? t("ExistingOccasions") : activeTab === "categories" ? t("ExistingCategories") : "Existing Roles"}
+                {activeTab === "festivals" ? "Existing Festivals" : activeTab === "occasions" ? t("ExistingOccasions") : activeTab === "categories" ? t("ExistingCategories") : "Existing Roles"}
               </h4>
               
               {currentList.length === 0 ? (
@@ -190,7 +229,12 @@ export default function Setup() {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                   {currentList.map(item => (
                     <div key={item.id} className="flex items-center justify-between p-4 bg-gray-50 border border-gray-200 rounded-xl hover:border-gray-300 transition-colors">
-                      <span className="font-bold text-gray-800">{item.name}</span>
+                      <div className="flex flex-col">
+                        <span className="font-bold text-gray-800">{item.name}</span>
+                        {item.date && (
+                          <span className="text-xs text-gray-500 mt-0.5">{format(new Date(item.date), "MMMM dd, yyyy")}</span>
+                        )}
+                      </div>
                       <button
                         onClick={() => handleDelete(item.id)}
                         className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors"

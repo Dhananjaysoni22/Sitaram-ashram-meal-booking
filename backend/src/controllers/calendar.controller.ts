@@ -1,6 +1,12 @@
 import { Request, Response } from "express";
 import { asyncHandler } from "../utils/asyncHandler";
-import { getFestivalsForMonthService, getFestivalsForDateService } from "../services/calendar.service";
+import { 
+  getFestivalsForMonthService, 
+  getFestivalsForDateService,
+  createFestivalService,
+  deleteFestivalService,
+  getAllFestivalsService
+} from "../services/calendar.service";
 
 export const getMonthlyFestivals = asyncHandler(async (req: Request, res: Response) => {
   const { year, month } = req.query;
@@ -20,4 +26,23 @@ export const getDateFestivals = asyncHandler(async (req: Request, res: Response)
 
   const data = await getFestivalsForDateService(date);
   res.json({ success: true, data });
+});
+
+export const getAllFestivals = asyncHandler(async (req: Request, res: Response) => {
+  const data = await getAllFestivalsService();
+  res.json({ success: true, data });
+});
+
+export const createFestival = asyncHandler(async (req: Request, res: Response) => {
+  const { date, name } = req.body;
+  if (!date || !name) return res.status(400).json({ success: false, error: "date and name required" });
+  
+  const data = await createFestivalService(new Date(date), name);
+  res.json({ success: true, data });
+});
+
+export const deleteFestival = asyncHandler(async (req: Request, res: Response) => {
+  const { id } = req.params;
+  await deleteFestivalService(id);
+  res.json({ success: true });
 });
