@@ -34,16 +34,21 @@ export default function CalendarView() {
   const localeToUse = isHindi ? hi : enUS;
 
   // Helper to determine dot color for a specific meal on a specific day
-  const getMealDotColor = (date: Date, mealType: string) => {
-    const booking = bookings.find(
+  const getMealDotColor = (date: Date, baseMealType: string) => {
+    const dayBookings = bookings.filter(
       (b) =>
-        b.mealType === mealType &&
+        b.mealType.includes(baseMealType) &&
         new Date(b.date).toDateString() === date.toDateString() &&
         b.status !== "CANCELLED"
     );
 
-    if (!booking) return "bg-gray-300"; // Available
-    if (booking.status === "COMPLETED") return "bg-green-500"; // Completed
+    if (dayBookings.length === 0) return "bg-gray-300"; // Available
+    
+    // If ANY of the bookings for this meal type (ground or first floor) are still pending/booked, show red.
+    // Otherwise if all are completed, show green.
+    const allCompleted = dayBookings.every(b => b.status === "COMPLETED");
+    if (allCompleted) return "bg-green-500"; // Completed
+    
     return "bg-red-400"; // Booked
   };
 
@@ -114,8 +119,8 @@ export default function CalendarView() {
                 {hasFestival && (
                   <div className="mb-1 flex-1 hidden sm:block">
                     {dayFestivals.map((f, i) => (
-                      <div key={i} className="text-[9px] sm:text-[10px] font-bold text-purple-700 bg-purple-100 rounded px-1 py-0.5 truncate leading-tight mt-0.5" title={f.name}>
-                        🕉️ {f.name}
+                      <div key={i} className="text-[9px] sm:text-[10px] font-bold text-purple-700 bg-purple-100 rounded px-1 py-0.5 truncate leading-tight mt-0.5" title={f}>
+                        ✨ {f}
                       </div>
                     ))}
                   </div>
@@ -156,7 +161,7 @@ export default function CalendarView() {
                     {format(new Date(date), "MMM d")}
                   </div>
                   <div className="text-purple-800">
-                    {fests.map(f => f.name).join(", ")}
+                    {fests.map(f => f).join(", ")}
                   </div>
                 </div>
               ))}
