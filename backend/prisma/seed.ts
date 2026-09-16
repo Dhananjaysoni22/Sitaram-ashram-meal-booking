@@ -38,31 +38,29 @@ async function main() {
 
   console.log('Created Super Admin (admin) and Staff (staff1)');
 
-  // 2. Create some dummy bookings
-  const today = new Date();
-  const dummyBookings = [
-    {
-      date: today,
-      mealType: 'BALBHOG' as const,
-      status: 'BOOKED' as const,
-      sponsorName: 'Rahul Desai',
-      mobileNumber: '9876543210',
-      cityLocation: 'Mumbai',
-      occasion: 'Birthday',
-      monksCount: 10,
-      guestsCount: 5,
-      totalCount: 15,
-      specialInstructions: '1. Roti\n2. Sabzi'
+  // 2. Create some dummy bookings only in development if none exist
+  if (process.env.NODE_ENV !== 'production') {
+    const bookingCount = await prisma.booking.count();
+    if (bookingCount === 0) {
+      const today = new Date();
+      await prisma.booking.create({
+        data: {
+          date: today,
+          mealType: 'BALBHOG',
+          status: 'BOOKED',
+          sponsorName: 'Rahul Desai',
+          mobileNumber: '9876543210',
+          cityLocation: 'Mumbai',
+          occasion: 'Birthday',
+          monksCount: 10,
+          guestsCount: 5,
+          totalCount: 15,
+          specialInstructions: '1. Roti\n2. Sabzi'
+        }
+      });
+      console.log('Created 1 dummy booking');
     }
-  ];
-
-  for (const b of dummyBookings) {
-    await prisma.booking.create({
-      data: b
-    });
   }
-
-  console.log('Created 1 dummy booking');
 }
 
 main()
