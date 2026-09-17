@@ -7,13 +7,13 @@ import { Search, Download } from 'lucide-react';
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
-import EditBookingModal from '../components/EditBookingModal';
+import ViewBookingModal from '../components/ViewBookingModal';
 
 export default function Reports() {
   const { t, i18n } = useTranslation();
   const [filteredBookings, setFilteredBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
-  const [editingBooking, setEditingBooking] = useState<any>(null);
+  const [viewBooking, setViewBooking] = useState<any>(null);
   
   // Filters
   const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
@@ -229,10 +229,10 @@ export default function Reports() {
                     </td>
                     <td className="p-4 whitespace-nowrap text-right space-x-2">
                       <button 
-                        onClick={() => setEditingBooking(b)}
+                        onClick={() => setViewBooking(b)}
                         className="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg text-xs font-bold border border-gray-200 transition-colors"
                       >
-                        {t('Edit')}
+                        View
                       </button>
                     </td>
                   </tr>
@@ -282,14 +282,10 @@ export default function Reports() {
         </div>
       )}
 
-      {editingBooking && (
-        <EditBookingModal 
-          booking={editingBooking} 
-          onClose={() => setEditingBooking(null)} 
-          onSave={() => {
-            setEditingBooking(null);
-            fetchReports();
-          }} 
+      {viewBooking && (
+        <ViewBookingModal 
+          booking={viewBooking} 
+          onClose={() => setViewBooking(null)} 
         />
       )}
     </div>
