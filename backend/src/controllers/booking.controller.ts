@@ -83,9 +83,12 @@ export const updateBookingDetails = asyncHandler(
 );
 
 export const swapBookings = asyncHandler(async (req: Request, res: Response) => {
+  const user = (req as any).user;
+  if (user.role !== "SUPER_ADMIN") {
+    throw new AppError("Only an Admin can swap bookings.", 403);
+  }
   const { date, baseMealType } = req.params;
-  const userId = (req as any).user.id;
-  await swapBookingsService(date, baseMealType, userId);
+  await swapBookingsService(date, baseMealType, user.id);
   res.json({ success: true, message: "Bookings swapped successfully" });
 });
 

@@ -325,7 +325,7 @@ export default function Home() {
                       </div>
                     )}
 
-                    {canEditBooking && booking.status !== "COMPLETED" && floorBooking && floorBooking.status !== "COMPLETED" && (
+                    {user?.role === "SUPER_ADMIN" && booking.status !== "COMPLETED" && floorBooking && floorBooking.status !== "COMPLETED" && (
                       <button
                         onClick={() => handleSwap(meal.type)}
                         className="mt-3 w-full flex justify-center items-center gap-2 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 rounded-xl text-sm font-bold transition shadow-sm"
