@@ -5,7 +5,8 @@ import {
   newBooking,
   updateStatus,
   updateBookingDetails,
-  getReportBookings
+  getReportBookings,
+  swapBookings
 } from "../controllers/booking.controller";
 import { protect } from "../middlewares/auth.middleware";
 
@@ -14,6 +15,7 @@ const router = express.Router();
 // Apply auth middleware to all booking routes
 router.use(protect);
 
+router.route("/swap/:date/:baseMealType").post(swapBookings);
 router.route("/report").get(getReportBookings);
 router.route("/").get(getAllBookings).post(newBooking);
 router.route("/:id").patch(updateBookingDetails);

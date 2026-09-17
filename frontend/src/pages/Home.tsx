@@ -3,7 +3,7 @@ import { format, isAfter, startOfDay } from "date-fns";
 import { hi, enUS } from "date-fns/locale";
 import { useTranslation } from "react-i18next";
 import { jsPDF } from "jspdf";
-import { getAllBookings, updateBookingStatus } from "../api/booking.api";
+import { getAllBookings, updateBookingStatus, swapBookings } from "../api/booking.api";
 import EditBookingModal from "../components/EditBookingModal";
 import { useNavigate } from "react-router-dom";
 import ViewBookingModal from "../components/ViewBookingModal";
@@ -45,6 +45,17 @@ export default function Home() {
       fetchBookings();
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const handleSwap = async (baseMealType: string) => {
+    try {
+      const dateStr = format(today, "yyyy-MM-dd");
+      await swapBookings(dateStr, baseMealType);
+      fetchBookings();
+    } catch (err: any) {
+      console.error(err);
+      alert(err.response?.data?.error || "Error swapping bookings");
     }
   };
 
@@ -203,6 +214,13 @@ export default function Home() {
                 new Date(b.date).toDateString() === today.toDateString() &&
                 b.status !== "CANCELLED",
             );
+            
+            const floorBooking = (meal.type === "RAJBHOG" || meal.type === "SAYANKALIN") ? bookings.find(
+              (b: any) =>
+                b.mealType === meal.type + "_FIRST_FLOOR" &&
+                new Date(b.date).toDateString() === today.toDateString() &&
+                b.status !== "CANCELLED",
+            ) : null;
 
             return (
               <div
@@ -305,6 +323,21 @@ export default function Home() {
                           {t("CancelBooking")}
                         </button>
                       </div>
+                    )}
+
+                    {canEditBooking && booking.status !== "COMPLETED" && floorBooking && floorBooking.status !== "COMPLETED" && (
+                      <button
+                        onClick={() => handleSwap(meal.type)}
+                        className="mt-3 w-full flex justify-center items-center gap-2 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 rounded-xl text-sm font-bold transition shadow-sm"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <polyline points="16 3 21 3 21 8"></polyline>
+                          <line x1="4" y1="14" x2="21" y2="3"></line>
+                          <polyline points="8 21 3 21 3 16"></polyline>
+                          <line x1="20" y1="10" x2="3" y2="21"></line>
+                        </svg>
+                        Swap with First Floor
+                      </button>
                     )}
 
                     {/* PDF DOWNLOAD BUTTON */}

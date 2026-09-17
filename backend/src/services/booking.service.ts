@@ -123,3 +123,22 @@ export const getReportBookingsService = async (
 
   return { data, total, stats };
 };
+
+export const swapBookingsService = async (dateStr: string, baseMealType: string, userId: string) => {
+  const targetDate = new Date(dateStr);
+  const startOfDay = new Date(targetDate); startOfDay.setHours(0, 0, 0, 0);
+  const endOfDay = new Date(targetDate); endOfDay.setHours(23, 59, 59, 999);
+
+  const floorMeal = baseMealType + "_FIRST_FLOOR";
+
+  const groundBooking = await prisma.booking.findFirst({ where: { date: { gte: startOfDay, lt: endOfDay }, mealType: baseMealType as any, status: { not: "CANCELLED" } } });
+  const firstFloorBooking = await prisma.booking.findFirst({ where: { date: { gte: startOfDay, lt: endOfDay }, mealType: floorMeal as any, status: { not: "CANCELLED" } } });
+
+  if (!groundBooking || !firstFloorBooking) throw new AppError("Both Ground and First Floor must be booked to swap them.", 400);
+
+  await prisma.$transaction([
+    prisma.booking.update({ where: { id: groundBooking.id }, data: { mealType: floorMeal as any, updatedById: userId } }),
+    prisma.booking.update({ where: { id: firstFloorBooking.id }, data: { mealType: baseMealType as any, updatedById: userId } })
+  ]);
+};
+

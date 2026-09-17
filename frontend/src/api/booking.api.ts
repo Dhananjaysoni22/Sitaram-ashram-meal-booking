@@ -31,3 +31,8 @@ export const updateBookingStatus = (
 ) => {
   return axiosClient.patch(`/bookings/${id}/status`, { status });
 };
+
+export const swapBookings = (date: string, baseMealType: string) => {
+  return axiosClient.post(`/bookings/swap/${date}/${baseMealType}`);
+};
+

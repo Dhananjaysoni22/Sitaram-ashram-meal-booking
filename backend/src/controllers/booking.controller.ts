@@ -80,3 +80,11 @@ export const updateBookingDetails = asyncHandler(
     });
   },
 );
+
+export const swapBookings = asyncHandler(async (req: Request, res: Response) => {
+  const { date, baseMealType } = req.params;
+  const userId = (req as any).user.id;
+  await require("../services/booking.service").swapBookingsService(date, baseMealType, userId);
+  res.json({ success: true, message: "Bookings swapped successfully" });
+});
+
