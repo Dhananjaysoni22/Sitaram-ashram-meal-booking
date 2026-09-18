@@ -43,6 +43,6 @@ export const createFestival = asyncHandler(async (req: Request, res: Response) =
 
 export const deleteFestival = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
-  await deleteFestivalService(id);
+  await deleteFestivalService(id as string);
   res.json({ success: true });
 });

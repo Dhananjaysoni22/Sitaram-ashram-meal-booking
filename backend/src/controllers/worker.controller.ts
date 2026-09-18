@@ -14,7 +14,7 @@ export const createWorker = asyncHandler(async (req: Request, res: Response) => 
 });
 
 export const updateWorker = asyncHandler(async (req: Request, res: Response) => {
-  const worker = await workerService.updateWorkerService(req.params.id, req.body);
+  const worker = await workerService.updateWorkerService(req.params.id as string, req.body);
   res.json({ success: true, data: worker });
 });
 
@@ -45,7 +45,7 @@ export const markAbsent = asyncHandler(async (req: Request, res: Response) => {
 
 // ---- Payments ----
 export const getWorkerPayments = asyncHandler(async (req: Request, res: Response) => {
-  const payments = await workerService.getWorkerPaymentsService(req.params.workerId);
+  const payments = await workerService.getWorkerPaymentsService(req.params.workerId as string);
   res.json({ success: true, data: payments });
 });
 

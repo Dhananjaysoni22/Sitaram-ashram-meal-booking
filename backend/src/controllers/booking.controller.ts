@@ -74,7 +74,7 @@ export const updateBookingDetails = asyncHandler(
     const id = req.params.id;
     const userRole = (req as any).user?.role || "COORDINATOR"; // default just in case
     const userId = (req as any).user?.id;
-    const updated = await updateBookingDetailsService(id, req.body, userRole, userId);
+    const updated = await updateBookingDetailsService(id as string, req.body, userRole as string, userId as string);
     res.status(200).json({
       success: true,
       data: updated,
@@ -88,7 +88,7 @@ export const swapBookings = asyncHandler(async (req: Request, res: Response) => 
     throw new AppError("Only an Admin can swap bookings.", 403);
   }
   const { date, baseMealType } = req.params;
-  await swapBookingsService(date, baseMealType, user.id);
+  await swapBookingsService(date as string, baseMealType as string, user.id);
   res.json({ success: true, message: "Bookings swapped successfully" });
 });
 

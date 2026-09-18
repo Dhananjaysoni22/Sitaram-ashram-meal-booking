@@ -12,10 +12,10 @@ export const getAllPermissions = asyncHandler(async (req: Request, res: Response
 });
 
 export const getMyPermissions = asyncHandler(async (req: Request, res: Response) => {
-  if (!req.user) {
+  if (!(req as any).user) {
     return res.status(401).json({ success: false, message: "Unauthorized" });
   }
-  const permissions = await getMyPermissionsService(req.user.role);
+  const permissions = await getMyPermissionsService((req as any).user.role);
   res.json({ success: true, data: permissions.map((p: any) => p.screen) });
 });
 

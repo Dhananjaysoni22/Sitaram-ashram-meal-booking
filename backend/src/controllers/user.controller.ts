@@ -18,7 +18,7 @@ export const createUser = asyncHandler(async (req: Request, res: Response) => {
 export const updateUser = asyncHandler(async (req: Request, res: Response) => {
   const { id } = req.params;
   const { name, username, role, isActive } = req.body;
-  const updatedUser = await editUserService(id, name, username, role, isActive);
+  const updatedUser = await editUserService(id as string, name, username, role, isActive);
   res.status(200).json({ success: true, data: updatedUser });
 });
 
@@ -28,6 +28,6 @@ export const resetPin = asyncHandler(async (req: Request, res: Response) => {
   
   if (!pin) throw new AppError("New PIN is required", 400);
   
-  await resetUserPinService(id, pin);
+  await resetUserPinService(id as string, pin);
   res.status(200).json({ success: true, message: "PIN reset successfully" });
 });
