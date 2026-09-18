@@ -4,6 +4,7 @@ This guide walks you through deploying the application on a fresh Linux server (
 
 ## 1. Prerequisites (On the Server)
 
+### For Linux (Ubuntu):
 Install **Git** and **Docker**:
 ```bash
 sudo apt update && sudo apt upgrade -y
@@ -13,6 +14,11 @@ sudo apt install git -y
 curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 ```
+
+### For Windows Server:
+1. Download and install **Git for Windows**: https://git-scm.com/download/win
+2. Download and install **Docker Desktop**: https://docs.docker.com/desktop/install/windows-install/ (Ensure WSL2 is enabled during installation).
+3. Restart the Windows Server if prompted.
 
 ## 2. Clone the Code
 
@@ -27,7 +33,11 @@ The `docker-compose.yml` file uses sensible defaults for the database.
 However, for production security, create a `.env` file in the **root directory** (same folder as `docker-compose.yml`):
 
 ```bash
+# On Linux:
 nano .env
+
+# On Windows (PowerShell):
+notepad .env
 ```
 
 Paste this inside:
@@ -47,13 +57,13 @@ JWT_SECRET="YourVeryLongRandomSecretStringHere12345!"
 TELEGRAM_BOT_TOKEN="your_bot_token"
 TELEGRAM_CHAT_ID="your_chat_id"
 ```
-Press `Ctrl+O`, `Enter`, and `Ctrl+X` to save and exit.
+Save and exit the file.
 
 ## 4. Start the Application
 
-Run the following command in the `maharaj` folder:
+Run the following command in the `maharaj` folder (using Terminal or PowerShell):
 ```bash
-sudo docker compose up -d --build
+docker compose up -d --build
 ```
 
 **What this does:**
@@ -72,8 +82,16 @@ You can now log in using:
 - **PIN:** `1080`
 
 **Note:** If the frontend is loading but API calls fail, make sure your server's firewall has opened **Port 80 (HTTP)** and **Port 5000 (API)**.
+
+**For Linux (UFW):**
 ```bash
 sudo ufw allow 80/tcp
 sudo ufw allow 5000/tcp
+```
+
+**For Windows (PowerShell Run as Administrator):**
+```powershell
+New-NetFirewallRule -DisplayName "Ashram Web Port 80" -Direction Inbound -LocalPort 80 -Protocol TCP -Action Allow
+New-NetFirewallRule -DisplayName "Ashram API Port 5000" -Direction Inbound -LocalPort 5000 -Protocol TCP -Action Allow
 ```
 
