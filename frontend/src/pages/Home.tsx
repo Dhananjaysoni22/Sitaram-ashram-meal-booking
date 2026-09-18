@@ -3,7 +3,11 @@ import { format, isAfter, startOfDay } from "date-fns";
 import { hi, enUS } from "date-fns/locale";
 import { useTranslation } from "react-i18next";
 import { jsPDF } from "jspdf";
-import { getAllBookings, updateBookingStatus, swapBookings } from "../api/booking.api";
+import {
+  getAllBookings,
+  updateBookingStatus,
+  swapBookings,
+} from "../api/booking.api";
 import EditBookingModal from "../components/EditBookingModal";
 import { useNavigate } from "react-router-dom";
 import ViewBookingModal from "../components/ViewBookingModal";
@@ -17,7 +21,8 @@ export default function Home() {
   const [viewBooking, setViewBooking] = useState<any>(null);
   const today = new Date();
   const navigate = useNavigate();
-  const canEditBooking = user?.role === 'SUPER_ADMIN' || user?.role === 'BOOKING_COORDINATOR';
+  const canEditBooking =
+    user?.role === "SUPER_ADMIN" || user?.role === "BOOKING_COORDINATOR";
 
   const isHindi = i18n.language === "hi";
   const localeToUse = isHindi ? hi : enUS;
@@ -130,30 +135,30 @@ export default function Home() {
       tmp.style.width = "1000px";
       tmp.innerHTML = html;
       document.body.appendChild(tmp);
-      
+
       // Manually inject numbers for ordered lists (bypasses Tailwind list resets)
-      const ols = tmp.querySelectorAll('ol');
-      ols.forEach(ol => {
-        const lis = Array.from(ol.children).filter(el => el.tagName === 'LI');
+      const ols = tmp.querySelectorAll("ol");
+      ols.forEach((ol) => {
+        const lis = Array.from(ol.children).filter((el) => el.tagName === "LI");
         lis.forEach((li, index) => {
           li.prepend(document.createTextNode(`${index + 1}. `));
         });
       });
 
       // Manually inject bullets for unordered lists
-      const uls = tmp.querySelectorAll('ul');
-      uls.forEach(ul => {
-        const lis = Array.from(ul.children).filter(el => el.tagName === 'LI');
-        lis.forEach(li => {
+      const uls = tmp.querySelectorAll("ul");
+      uls.forEach((ul) => {
+        const lis = Array.from(ul.children).filter((el) => el.tagName === "LI");
+        lis.forEach((li) => {
           li.prepend(document.createTextNode(`• `));
         });
       });
 
       // Also force block elements to have newlines in case innerText misses some
-      const blocks = tmp.querySelectorAll('p, div, br, li');
-      blocks.forEach(block => {
-        if (block.tagName === 'BR') {
-           block.replaceWith(document.createTextNode('\n'));
+      const blocks = tmp.querySelectorAll("p, div, br, li");
+      blocks.forEach((block) => {
+        if (block.tagName === "BR") {
+          block.replaceWith(document.createTextNode("\n"));
         }
       });
 
@@ -162,12 +167,16 @@ export default function Home() {
       return text.replace(/\n\n+/g, "\n").trim();
     };
     const menuText = doc.splitTextToSize(
-      stripHtml(booking.specialInstructions || "") || "No special instructions provided.",
+      stripHtml(booking.specialInstructions || "") ||
+        "No special instructions provided.",
       170,
     );
     doc.text(menuText, 20, currentY);
 
-    const safeName = (booking.sponsorName || "Unknown").replace(/[^a-zA-Z0-9]/g, '_');
+    const safeName = (booking.sponsorName || "Unknown").replace(
+      /[^a-zA-Z0-9]/g,
+      "_",
+    );
     const fileDate = format(new Date(booking.date), "dd-MMM-yyyy");
     doc.save(`Kitchen-Slip-${safeName}-${booking.mealType}-${fileDate}.pdf`);
   };
@@ -180,8 +189,16 @@ export default function Home() {
       name: t("Sayankalin"),
       subtitle: t("SayankalinDesc"),
     },
-    { type: "RAJBHOG_FIRST_FLOOR", name: t("RajbhogFF"), subtitle: t("RajbhogFFDesc") },
-    { type: "SAYANKALIN_FIRST_FLOOR", name: t("SayankalinFF"), subtitle: t("SayankalinFFDesc") },
+    {
+      type: "RAJBHOG_FIRST_FLOOR",
+      name: t("RajbhogFF"),
+      subtitle: t("RajbhogFFDesc"),
+    },
+    {
+      type: "SAYANKALIN_FIRST_FLOOR",
+      name: t("SayankalinFF"),
+      subtitle: t("SayankalinFFDesc"),
+    },
   ];
 
   const upcomingBookings = bookings
@@ -214,13 +231,17 @@ export default function Home() {
                 new Date(b.date).toDateString() === today.toDateString() &&
                 b.status !== "CANCELLED",
             );
-            
-            const floorBooking = (meal.type === "RAJBHOG" || meal.type === "SAYANKALIN") ? bookings.find(
-              (b: any) =>
-                b.mealType === meal.type + "_FIRST_FLOOR" &&
-                new Date(b.date).toDateString() === today.toDateString() &&
-                b.status !== "CANCELLED",
-            ) : null;
+
+            const floorBooking =
+              meal.type === "RAJBHOG" || meal.type === "SAYANKALIN"
+                ? bookings.find(
+                    (b: any) =>
+                      b.mealType === meal.type + "_FIRST_FLOOR" &&
+                      new Date(b.date).toDateString() ===
+                        today.toDateString() &&
+                      b.status !== "CANCELLED",
+                  )
+                : null;
 
             return (
               <div
@@ -265,7 +286,12 @@ export default function Home() {
                           <strong>{t("OccasionLabel")}:</strong>{" "}
                           {booking.occasion || "-"}
                         </p>
-                        <p onClick={() => setViewBooking(booking)}>View</p>
+                        <button
+                          className="cursor-pointer border py-1 px-2 rounded-xl hover:bg-[#FEF7E7]"
+                          onClick={() => setViewBooking(booking)}
+                        >
+                          View
+                        </button>
                       </div>
                       <div className="bg-white border border-[#ece4da] p-2 rounded flex justify-between items-center text-[13px]">
                         <div className="text-center px-2 border-r border-[#ece4da] flex-1">
@@ -296,9 +322,22 @@ export default function Home() {
                     </div>
 
                     <div className="text-[10px] text-gray-400 mt-2 space-y-0.5 border-t border-gray-100 pt-2">
-                      <p>Created by: <strong>{booking.createdByUser?.name || "System"}</strong> • {format(new Date(booking.createdAt || Date.now()), "MMM d, yyyy h:mm a")}</p>
+                      <p>
+                        Created by:{" "}
+                        <strong>
+                          {booking.createdByUser?.name || "System"}
+                        </strong>{" "}
+                        •{" "}
+                        {format(
+                          new Date(booking.createdAt || Date.now()),
+                          "MMM d, yyyy h:mm a",
+                        )}
+                      </p>
                       {booking.updatedByUser && (
-                        <p>Last edited by: <strong>{booking.updatedByUser.name}</strong></p>
+                        <p>
+                          Last edited by:{" "}
+                          <strong>{booking.updatedByUser.name}</strong>
+                        </p>
                       )}
                     </div>
 
@@ -325,20 +364,33 @@ export default function Home() {
                       </div>
                     )}
 
-                    {user?.role === "SUPER_ADMIN" && booking.status !== "COMPLETED" && floorBooking && floorBooking.status !== "COMPLETED" && (
-                      <button
-                        onClick={() => handleSwap(meal.type)}
-                        className="mt-3 w-full flex justify-center items-center gap-2 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 rounded-xl text-sm font-bold transition shadow-sm"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                          <polyline points="16 3 21 3 21 8"></polyline>
-                          <line x1="4" y1="14" x2="21" y2="3"></line>
-                          <polyline points="8 21 3 21 3 16"></polyline>
-                          <line x1="20" y1="10" x2="3" y2="21"></line>
-                        </svg>
-                        Swap with First Floor
-                      </button>
-                    )}
+                    {user?.role === "SUPER_ADMIN" &&
+                      booking.status !== "COMPLETED" &&
+                      floorBooking &&
+                      floorBooking.status !== "COMPLETED" && (
+                        <button
+                          onClick={() => handleSwap(meal.type)}
+                          className="mt-3 w-full flex justify-center items-center gap-2 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 rounded-xl text-sm font-bold transition shadow-sm"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          >
+                            <polyline points="16 3 21 3 21 8"></polyline>
+                            <line x1="4" y1="14" x2="21" y2="3"></line>
+                            <polyline points="8 21 3 21 3 16"></polyline>
+                            <line x1="20" y1="10" x2="3" y2="21"></line>
+                          </svg>
+                          Swap with First Floor
+                        </button>
+                      )}
 
                     {/* PDF DOWNLOAD BUTTON */}
                     <button
@@ -368,14 +420,15 @@ export default function Home() {
                     <p className="text-[15px] font-medium text-gray-700 mb-4">
                       {t("ServiceAvailableDesc")}
                     </p>
-                    {canEditBooking && allowedScreens.includes("NEW_BOOKING") && (
-                      <button
-                        className="px-6 py-2.5 bg-[#a36329] hover:bg-[#8b5321] text-white rounded-xl text-sm font-bold transition shadow-sm"
-                        onClick={() => navigate("/booking/new")}
-                      >
-                        {t("BookService")}
-                      </button>
-                    )}
+                    {canEditBooking &&
+                      allowedScreens.includes("NEW_BOOKING") && (
+                        <button
+                          className="px-6 py-2.5 bg-[#a36329] hover:bg-[#8b5321] text-white rounded-xl text-sm font-bold transition shadow-sm"
+                          onClick={() => navigate("/booking/new")}
+                        >
+                          {t("BookService")}
+                        </button>
+                      )}
                   </div>
                 )}
               </div>
@@ -415,7 +468,12 @@ export default function Home() {
                     <p className="text-[14px] text-gray-800 mb-2">
                       <strong>{b.sponsorName}</strong>
                     </p>
-                    <p onClick={() => setViewBooking(b)}>View</p>
+                    <button
+                      className="cursor-pointer"
+                      onClick={() => setViewBooking(b)}
+                    >
+                      View
+                    </button>
                   </div>
 
                   <div className="text-[11px] text-gray-500 font-medium bg-gray-50 p-2 rounded border border-gray-100 flex flex-wrap gap-x-3 gap-y-1">
@@ -435,30 +493,39 @@ export default function Home() {
                 </div>
 
                 <div className="text-[10px] text-gray-400 space-y-0.5 border-t border-gray-100 pt-2">
-                  <p>Created by: <strong>{b.createdByUser?.name || "System"}</strong> • {format(new Date(b.createdAt || Date.now()), "MMM d, yyyy h:mm a")}</p>
+                  <p>
+                    Created by:{" "}
+                    <strong>{b.createdByUser?.name || "System"}</strong> •{" "}
+                    {format(
+                      new Date(b.createdAt || Date.now()),
+                      "MMM d, yyyy h:mm a",
+                    )}
+                  </p>
                   {b.updatedByUser && (
-                    <p>Last edited by: <strong>{b.updatedByUser.name}</strong></p>
+                    <p>
+                      Last edited by: <strong>{b.updatedByUser.name}</strong>
+                    </p>
                   )}
                 </div>
 
-                  <div className="flex flex-col gap-2 mt-auto">
-                    {canEditBooking && b.status !== "COMPLETED" && (
-                      <>
-                        <button
-                          onClick={() => setEditingBooking(b)}
-                          className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 rounded-lg text-xs font-bold transition"
-                        >
-                          {t("Edit")}
-                        </button>
-                        <button
-                          className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl text-sm font-bold transition shadow-sm"
-                          onClick={() => handleCancel(b.id)}
-                        >
-                          {t("CancelBooking")}
-                        </button>
-                      </>
-                    )}
-                    <button
+                <div className="flex flex-col gap-2 mt-auto">
+                  {canEditBooking && b.status !== "COMPLETED" && (
+                    <>
+                      <button
+                        onClick={() => setEditingBooking(b)}
+                        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 rounded-lg text-xs font-bold transition"
+                      >
+                        {t("Edit")}
+                      </button>
+                      <button
+                        className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl text-sm font-bold transition shadow-sm"
+                        onClick={() => handleCancel(b.id)}
+                      >
+                        {t("CancelBooking")}
+                      </button>
+                    </>
+                  )}
+                  <button
                     onClick={() => generatePDF(b)}
                     className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#fdf5e6] hover:bg-[#f5e3cd] text-[#99582a] border border-[#f5e3cd] rounded-lg text-xs font-bold transition mt-auto"
                   >
