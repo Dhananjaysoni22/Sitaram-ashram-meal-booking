@@ -18,6 +18,8 @@ export default function Home() {
   const { t, i18n } = useTranslation();
   const [bookings, setBookings] = useState<any[]>([]);
   const [editingBooking, setEditingBooking] = useState<any>(null);
+  const [upcomingPage, setUpcomingPage] = useState(1);
+  const [upcomingLimit, setUpcomingLimit] = useState(10);
   const [viewBooking, setViewBooking] = useState<any>(null);
   const today = new Date();
   const navigate = useNavigate();
