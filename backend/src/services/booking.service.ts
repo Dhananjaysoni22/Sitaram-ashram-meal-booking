@@ -120,6 +120,11 @@ export const getReportBookingsService = async (
     cancelled: statsData.filter((b: any) => b.status === "CANCELLED").length,
     totalMonks: statsData.filter((b: any) => b.status !== "CANCELLED").reduce((acc: number, b: any) => acc + (b.monksCount || 0), 0),
     totalGuests: statsData.filter((b: any) => b.status !== "CANCELLED").reduce((acc: number, b: any) => acc + (b.guestsCount || 0), 0),
+    totalWaiters: statsData.filter((b: any) => b.status !== "CANCELLED").reduce((acc: number, b: any) => acc + (b.waiters || 0), 0),
+    totalValet: statsData.filter((b: any) => b.status !== "CANCELLED").reduce((acc: number, b: any) => acc + (b.valetParking || 0), 0),
+    totalCoolers: statsData.filter((b: any) => b.status !== "CANCELLED").reduce((acc: number, b: any) => acc + (b.coolers || 0), 0),
+    totalGuards: statsData.filter((b: any) => b.status !== "CANCELLED").reduce((acc: number, b: any) => acc + (b.guards || 0), 0),
+    totalMasalchis: statsData.filter((b: any) => b.status !== "CANCELLED").reduce((acc: number, b: any) => acc + (b.masalchis || 0), 0),
   };
 
   return { data, total, stats };
