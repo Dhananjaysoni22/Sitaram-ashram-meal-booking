@@ -44,6 +44,17 @@ export default function Reports() {
   const isHindi = i18n.language === 'hi';
   const localeToUse = isHindi ? hi : enUS;
 
+  const handleDelete = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this booking?")) return;
+    try {
+      await deleteBooking(id);
+      fetchReports();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete booking.");
+    }
+  };
+
   const fetchReports = () => {
     setLoading(true);
     getReportBookings(startDate, endDate, searchQuery, page, limit)
@@ -266,6 +277,14 @@ export default function Reports() {
                       >
                         View
                       </button>
+                      {user?.role === "SUPER_ADMIN" && (
+                        <button
+                          onClick={() => handleDelete(b.id)}
+                          className="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-xs font-bold border border-red-200 transition-colors ml-2"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
