@@ -210,6 +210,16 @@ export default function Reports() {
                         <span>{t('GuestsCount')}: <strong className="text-gray-800">{b.guestsCount}</strong></span>
                       </div>
                     </td>
+                    <td className="p-4 max-w-[200px]">
+                      <div className="flex flex-wrap gap-1 text-[10px]">
+                        {b.waiters > 0 && <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold" title="Waiters">W: {b.waiters}</span>}
+                        {b.valetParking > 0 && <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold" title="Valet">V: {b.valetParking}</span>}
+                        {b.coolers > 0 && <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold" title="Coolers">C: {b.coolers}</span>}
+                        {b.guards > 0 && <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold" title="Guards">G: {b.guards}</span>}
+                        {b.masalchis > 0 && <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold" title="Masalchis">M: {b.masalchis}</span>}
+                        {(!b.waiters && !b.valetParking && !b.coolers && !b.guards && !b.masalchis) && <span className="text-gray-400 font-medium">-</span>}
+                      </div>
+                    </td>
                     <td className="p-4 whitespace-nowrap">
                       <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${getStatusColor(b.status)}`}>
                         {t(b.status.charAt(0) + b.status.slice(1).toLowerCase())}
