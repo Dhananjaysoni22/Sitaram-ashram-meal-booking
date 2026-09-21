@@ -87,7 +87,7 @@ export default function Reports() {
       [t("GuestsCount")]: b.status === "CANCELLED" ? 0 : b.guestsCount,
       [t("TotalCount")]: b.status === "CANCELLED" ? 0 : b.totalCount,
       "Waiters": b.status === "CANCELLED" ? 0 : (b.waiters || 0), "Valet": b.status === "CANCELLED" ? 0 : (b.valetParking || 0), "Coolers": b.status === "CANCELLED" ? 0 : (b.coolers || 0), "Guards": b.status === "CANCELLED" ? 0 : (b.guards || 0), "Masalchis": b.status === "CANCELLED" ? 0 : (b.masalchis || 0),
-      [t("Status")]: t(b.status.charAt(0) + b.status.slice(1).toLowerCase()),
+      [t("Status")]: b.status.charAt(0) + b.status.slice(1).toLowerCase(),
     }));
     
     const ws = XLSX.utils.json_to_sheet(data);
@@ -112,7 +112,7 @@ export default function Reports() {
       b.monksCount,
       b.guestsCount,
       b.totalCount,
-      t(b.status.charAt(0) + b.status.slice(1).toLowerCase()),
+      b.status.charAt(0) + b.status.slice(1).toLowerCase(),
     ]);
 
     autoTable(doc, {
