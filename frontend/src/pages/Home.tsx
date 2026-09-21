@@ -354,9 +354,9 @@ export default function Home() {
           </p>
         ) : (
           <>
-            <div className="bg-white rounded-2xl border border-[#ece4da] shadow-sm overflow-hidden overflow-x-auto w-full">
+            <div className="bg-white rounded-2xl border border-[#ece4da] shadow-sm overflow-hidden overflow-x-auto w-full max-h-[400px] overflow-y-auto">
             <table className="w-full text-left border-collapse relative text-sm">
-                <thead className="bg-gray-50">
+                <thead className="bg-gray-50 sticky top-0 z-10 shadow-sm">
                   <tr className="border-b border-[#ece4da]">
                     <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">{t('Date')}</th>
                     <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">{t('MealType')}</th>
@@ -368,7 +368,7 @@ export default function Home() {
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#ece4da]">
-                  {upcomingBookings.map((b) => (
+                  {paginatedUpcoming.map((b) => (
                     <tr key={b.id} className="hover:bg-gray-50/50 transition-colors">
                       <td className="px-3 py-3 whitespace-nowrap">
                         <p className="font-bold text-[#3d2f23]">{format(new Date(b.date), "dd MMM yyyy")}</p>
