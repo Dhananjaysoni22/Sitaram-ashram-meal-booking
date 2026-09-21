@@ -154,19 +154,20 @@ export default function Workers() {
                         </span>
                       )}
                     </td>
-                    <td className="p-4 text-right space-x-2">
-                      <button 
-                        onClick={() => setPaymentWorker(w)}
-                        className="px-3 py-1.5 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg text-xs font-bold border border-green-200 transition-colors"
-                      >
-                        {t("Payments")}
-                      </button>
-                      <button 
-                        onClick={() => openEdit(w)}
-                        className="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg text-xs font-bold border border-gray-200 transition-colors"
-                      >
-                        {t("Edit")}
-                      </button>
+                    <td className="p-4 whitespace-nowrap">
+                      <div className="flex justify-end items-center gap-2">
+                        <button 
+                          onClick={() => setPaymentWorker(w)}
+                          className="px-3 py-1.5 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg text-xs font-bold border border-green-200 transition-colors"
+                        >
+                          {t("Payments")}
+                        </button>
+                        <button 
+                          onClick={() => openEdit(w)}
+                          className="px-3 py-1.5 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded-lg text-xs font-bold border border-gray-200 transition-colors"
+                        >
+                          {t("Edit")}
+                        </button>
                       {true && (
                         <button 
                           onClick={() => handleDelete(w.id)}
@@ -176,6 +177,7 @@ export default function Workers() {
                           <Trash2 size={14} />
                         </button>
                       )}
+                      </div>
                     </td>
                   </tr>
                 ))}
