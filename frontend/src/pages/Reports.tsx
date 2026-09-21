@@ -67,7 +67,7 @@ export default function Reports() {
       [t("MonksCount")]: b.monksCount,
       [t("GuestsCount")]: b.guestsCount,
       [t("TotalCount")]: b.totalCount,
-      "Extras": [b.waiters ? `Waiters:${b.waiters}` : "", b.valetParking ? `Valet:${b.valetParking}` : "", b.coolers ? `Coolers:${b.coolers}` : "", b.guards ? `Guards:${b.guards}` : "", b.masalchis ? `Masalchis:${b.masalchis}` : ""].filter(Boolean).join(" | "),
+      "Waiters": b.waiters || 0, "Valet": b.valetParking || 0, "Coolers": b.coolers || 0, "Guards": b.guards || 0, "Masalchis": b.masalchis || 0,
       [t("Status")]: t(b.status.charAt(0) + b.status.slice(1).toLowerCase()),
     }));
     
