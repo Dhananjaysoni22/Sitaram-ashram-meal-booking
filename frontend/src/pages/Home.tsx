@@ -85,14 +85,14 @@ export default function Home() {
     { type: "BALBHOG", name: t("Balbhog"), subtitle: t("BalbhogDesc") },
     { type: "RAJBHOG", name: t("Rajbhog"), subtitle: t("RajbhogDesc") },
     {
-      type: "SAYANKALIN",
-      name: t("Sayankalin"),
-      subtitle: t("SayankalinDesc"),
-    },
-    {
       type: "RAJBHOG_FIRST_FLOOR",
       name: t("RajbhogFF"),
       subtitle: t("RajbhogFFDesc"),
+    },
+    {
+      type: "SAYANKALIN",
+      name: t("Sayankalin"),
+      subtitle: t("SayankalinDesc"),
     },
     {
       type: "SAYANKALIN_FIRST_FLOOR",
