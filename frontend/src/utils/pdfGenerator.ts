@@ -14,7 +14,14 @@ export const generateBookingPDF = (booking: any, t: any) => {
 
   const formattedDate = format(new Date(booking.date), "dd MMMM yyyy");
   doc.text(`Date: ${formattedDate}`, 20, 40);
-    const translatedMealType = t(booking.mealType === "BALBHOG" ? "Balbhog" : booking.mealType === "RAJBHOG" ? "Rajbhog" : booking.mealType === "RAJBHOG_FIRST_FLOOR" ? "RajbhogFF" : booking.mealType === "SAYANKALIN_FIRST_FLOOR" ? "SayankalinFF" : "Sayankalin");
+  const mealTypeMap: any = {
+    BALBHOG: "(Breakfast) Balbhog",
+    RAJBHOG: "(Lunch) Rajbhog (Ground Floor)",
+    RAJBHOG_FIRST_FLOOR: "(Lunch) Rajbhog (First Floor)",
+    SAYANKALIN: "(Dinner) Sayankalin Prasadi (Ground Floor)",
+    SAYANKALIN_FIRST_FLOOR: "(Dinner) Sayankalin Prasadi (First Floor)",
+  };
+  const translatedMealType = mealTypeMap[booking.mealType] || booking.mealType;
   doc.text(`Meal Type: ${translatedMealType}`, 120, 40);
 
   doc.text(`Bhakt Name: ${booking.sponsorName}`, 20, 50);
