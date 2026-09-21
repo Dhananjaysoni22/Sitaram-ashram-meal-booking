@@ -83,10 +83,10 @@ export default function Reports() {
       [t("MealType")]: t(b.mealType === "BALBHOG" ? "Balbhog" : b.mealType === "RAJBHOG" ? "Rajbhog" : b.mealType === "RAJBHOG_FIRST_FLOOR" ? "RajbhogFF" : b.mealType === "SAYANKALIN_FIRST_FLOOR" ? "SayankalinFF" : "Sayankalin"),
       [t("SponsorName")]: b.sponsorName,
       [t("MobileNumber")]: b.mobileNumber,
-      [t("MonksCount")]: b.monksCount,
-      [t("GuestsCount")]: b.guestsCount,
-      [t("TotalCount")]: b.totalCount,
-      "Waiters": b.waiters || 0, "Valet": b.valetParking || 0, "Coolers": b.coolers || 0, "Guards": b.guards || 0, "Masalchis": b.masalchis || 0,
+      [t("MonksCount")]: b.status === "CANCELLED" ? 0 : b.monksCount,
+      [t("GuestsCount")]: b.status === "CANCELLED" ? 0 : b.guestsCount,
+      [t("TotalCount")]: b.status === "CANCELLED" ? 0 : b.totalCount,
+      "Waiters": b.status === "CANCELLED" ? 0 : (b.waiters || 0), "Valet": b.status === "CANCELLED" ? 0 : (b.valetParking || 0), "Coolers": b.status === "CANCELLED" ? 0 : (b.coolers || 0), "Guards": b.status === "CANCELLED" ? 0 : (b.guards || 0), "Masalchis": b.status === "CANCELLED" ? 0 : (b.masalchis || 0),
       [t("Status")]: t(b.status.charAt(0) + b.status.slice(1).toLowerCase()),
     }));
     
