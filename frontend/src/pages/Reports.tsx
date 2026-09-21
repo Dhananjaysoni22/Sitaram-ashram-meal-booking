@@ -210,7 +210,7 @@ export default function Reports() {
                       <p className="font-bold text-[#3d2f23]">{format(new Date(b.date), "dd MMM yyyy")}</p>
                     </td>
                     <td className="p-4 whitespace-nowrap">
-                      <span className="font-bold text-[#99582a] text-sm">{t(b.mealType.charAt(0) + b.mealType.slice(1).toLowerCase())}</span>
+                      <span className="font-bold text-[#99582a] text-sm">{t(b.mealType === "BALBHOG" ? "Balbhog" : b.mealType === "RAJBHOG" ? "Rajbhog" : b.mealType === "RAJBHOG_FIRST_FLOOR" ? "RajbhogFF" : b.mealType === "SAYANKALIN_FIRST_FLOOR" ? "SayankalinFF" : "Sayankalin")}</span>
                     </td>
                     <td className="p-4">
                       <p className="font-bold text-gray-800">{b.sponsorName}</p>
