@@ -4,18 +4,24 @@ import { format, startOfMonth, endOfMonth, eachDayOfInterval, isToday, getDay } 
 import { hi, enUS } from 'date-fns/locale';
 import { getAllBookings } from '../api/booking.api';
 import { getMonthlyFestivals } from '../api/calendar.api';
+import DayBookingsModal from '../components/DayBookingsModal';
+import ViewBookingModal from '../components/ViewBookingModal';
+import EditBookingModal from '../components/EditBookingModal';
 
 export default function CalendarView() {
   const { t, i18n } = useTranslation();
   const [currentDate, setCurrentDate] = useState(new Date());
   const [bookings, setBookings] = useState<any[]>([]);
   const [festivals, setFestivals] = useState<Record<string, any[]>>({});
+  const [selectedDay, setSelectedDay] = useState<Date | null>(null);
+  const [viewBooking, setViewBooking] = useState<any | null>(null);
+  const [editBooking, setEditBooking] = useState<any | null>(null);
+
+  const fetchAll = () => { getAllBookings().then(res => setBookings(res.data.data)).catch(console.error); };
 
   useEffect(() => {
     // Fetch all bookings for the calendar
-    getAllBookings()
-      .then((res) => setBookings(res.data))
-      .catch((err) => console.error(err));
+    fetchAll();
       
     // Fetch festivals
     getMonthlyFestivals(currentDate.getFullYear(), currentDate.getMonth() + 1)
@@ -97,7 +103,8 @@ export default function CalendarView() {
             return (
               <div 
                 key={day.toString()} 
-                className={`flex flex-col p-1 sm:p-2 lg:p-3 min-h-[70px] sm:min-h-[110px] lg:min-h-[120px] xl:min-h-[130px] border rounded-xl transition-colors relative overflow-hidden ${
+                onClick={() => setSelectedDay(day)}
+                className={`cursor-pointer flex flex-col p-1 sm:p-2 lg:p-3 min-h-[70px] sm:min-h-[110px] lg:min-h-[120px] xl:min-h-[130px] border rounded-xl transition-colors relative overflow-hidden ${
                   isCurrentDay 
                     ? 'border-[#a36329] bg-[#fef7e7] shadow-inner' 
                     : hasFestival
@@ -186,6 +193,37 @@ export default function CalendarView() {
         </div>
 
       </div>
+
+      {/* Modals */}
+      {selectedDay && (
+        <DayBookingsModal
+          date={selectedDay}
+          bookings={bookings.filter(b => new Date(b.date).toDateString() === selectedDay.toDateString())}
+          festivals={festivals[format(selectedDay, "yyyy-MM-dd")] || []}
+          onClose={() => setSelectedDay(null)}
+          onViewBooking={setViewBooking}
+          onEditBooking={setEditBooking}
+        />
+      )}
+
+      {viewBooking && (
+        <ViewBookingModal
+          booking={viewBooking}
+          onClose={() => setViewBooking(null)}
+        />
+      )}
+
+      {editBooking && (
+        <EditBookingModal
+          booking={editBooking}
+          onClose={() => setEditBooking(null)}
+          onSave={() => {
+            setEditBooking(null);
+            fetchAll();
+          }}
+        />
+      )}
+
     </div>
   );
 }
