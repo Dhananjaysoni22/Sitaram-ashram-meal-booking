@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { jsPDF } from "jspdf";
 import { useAuth } from "../context/AuthContext";
 import { Eye, Edit2, Download } from "lucide-react";
+import { generateBookingPDF } from "../utils/pdfGenerator";
 
 export default function DayBookingsModal({ 
   date, 
@@ -18,104 +19,7 @@ export default function DayBookingsModal({
   const { user } = useAuth();
 
   const generatePDF = (booking: any) => {
-    const doc = new jsPDF();
-    doc.setFontSize(22);
-    doc.setTextColor(153, 88, 42); 
-    doc.text(t("KitchenSlipTitle").toUpperCase(), 105, 20, { align: "center" });
-
-    doc.setFontSize(12);
-    doc.setTextColor(50, 50, 50);
-
-    const formattedDate = format(new Date(booking.date), "dd MMMM yyyy");
-    doc.text(`Date: ${formattedDate}`, 20, 40);
-    doc.text(`Meal Type: ${booking.mealType}`, 120, 40);
-
-    doc.text(`Bhakt Name: ${booking.sponsorName}`, 20, 50);
-    const mobileStr = booking.alternateNumber 
-      ? `Mobile: ${booking.mobileNumber}, ${booking.alternateNumber}`
-      : `Mobile: ${booking.mobileNumber}`;
-    doc.text(mobileStr, 120, 50);
-
-    doc.text(`City: ${booking.cityLocation}`, 20, 60);
-    doc.text(`Occasion: ${booking.occasion || "-"}`, 120, 60);
-
-    doc.setDrawColor(200, 200, 200);
-    doc.rect(20, 70, 170, 15);
-    doc.setFont("helvetica", "bold");
-    doc.text(
-      `Monks: ${booking.monksCount}    |    Guests: ${booking.guestsCount}    |    TOTAL: ${booking.totalCount}`,
-      25,
-      80,
-    );
-
-    let currentY = 95;
-
-    const extras = [];
-    if (booking.valetParking) extras.push(`Valet: ${booking.valetParking}`);
-    if (booking.waiters) extras.push(`Waiters: ${booking.waiters}`);
-    if (booking.coolers) extras.push(`Coolers: ${booking.coolers}`);
-    if (booking.guards) extras.push(`Guards: ${booking.guards}`);
-    if (booking.masalchis) extras.push(`Masalchis: ${booking.masalchis}`);
-
-    if (extras.length > 0) {
-      doc.setFont("helvetica", "bold");
-      doc.text(`Extras: ${extras.join("  |  ")}`, 20, currentY);
-      currentY += 15;
-    }
-
-    doc.setFont("helvetica", "bold");
-    doc.text("Meal Menu / Special Instructions:", 20, currentY);
-    currentY += 10;
-
-    doc.setFont("helvetica", "normal");
-    const stripHtml = (html: string) => {
-      const tmp = document.createElement("div");
-      tmp.style.position = "absolute";
-      tmp.style.left = "-9999px";
-      tmp.style.width = "1000px";
-      tmp.innerHTML = html;
-      document.body.appendChild(tmp);
-
-      const ols = tmp.querySelectorAll("ol");
-      ols.forEach((ol) => {
-        const lis = Array.from(ol.children).filter((el) => el.tagName === "LI");
-        lis.forEach((li, index) => {
-          li.prepend(document.createTextNode(`${index + 1}. `));
-        });
-      });
-
-      const uls = tmp.querySelectorAll("ul");
-      uls.forEach((ul) => {
-        const lis = Array.from(ul.children).filter((el) => el.tagName === "LI");
-        lis.forEach((li) => {
-          li.prepend(document.createTextNode(`• `));
-        });
-      });
-
-      const blocks = tmp.querySelectorAll("p, div, br, li");
-      blocks.forEach((block) => {
-        if (block.tagName === "BR") {
-          block.replaceWith(document.createTextNode("\n"));
-        }
-      });
-
-      let text = tmp.innerText || "";
-      document.body.removeChild(tmp);
-      return text.replace(/\n\n+/g, "\n").trim();
-    };
-    const menuText = doc.splitTextToSize(
-      stripHtml(booking.specialInstructions || "") ||
-        "No special instructions provided.",
-      170,
-    );
-    doc.text(menuText, 20, currentY);
-
-    const safeName = (booking.sponsorName || "Unknown").replace(
-      /[^a-zA-Z0-9]/g,
-      "_",
-    );
-    const fileDate = format(new Date(booking.date), "dd-MMM-yyyy");
-    doc.save(`Kitchen-Slip-${safeName}-${booking.mealType}-${fileDate}.pdf`);
+    generateBookingPDF(booking, t);
   };
 
   const getMealDisplayName = (mealType: string) => {
