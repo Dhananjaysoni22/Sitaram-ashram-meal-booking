@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getAllWorkers, createWorker, updateWorker } from "../api/worker.api";
 import { getWorkerCategories } from "../api/setup.api";
-import { Plus, Edit2, CheckCircle, XCircle, FileText } from "lucide-react";
+import { Plus, Edit2, CheckCircle, XCircle, FileText, Trash2 } from "lucide-react";
 import WorkerPaymentsModal from "../components/WorkerPaymentsModal";
 import { useNavigate } from "react-router-dom";
 
@@ -72,6 +72,18 @@ export default function Workers() {
     });
     setEditingWorker(worker);
     setShowAddModal(true);
+  };
+
+  const handleDelete = async (workerId: string) => {
+    if (window.confirm("Are you sure you want to delete this worker?")) {
+      try {
+        await updateWorker(workerId, { isActive: false });
+        fetchWorkers();
+      } catch (err) {
+        console.error(err);
+        alert("Failed to delete worker");
+      }
+    }
   };
 
   return (
@@ -155,6 +167,15 @@ export default function Workers() {
                       >
                         {t("Edit")}
                       </button>
+                      {w.isActive && (
+                        <button 
+                          onClick={() => handleDelete(w.id)}
+                          title="Delete (Set Inactive)"
+                          className="px-2 py-1.5 bg-red-50 hover:bg-red-100 text-red-600 rounded-lg text-xs font-bold border border-red-200 transition-colors inline-flex items-center justify-center"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}

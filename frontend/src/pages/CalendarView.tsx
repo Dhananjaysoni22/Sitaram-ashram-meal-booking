@@ -17,7 +17,7 @@ export default function CalendarView() {
   const [viewBooking, setViewBooking] = useState<any | null>(null);
   const [editBooking, setEditBooking] = useState<any | null>(null);
 
-  const fetchAll = () => { getAllBookings().then(res => setBookings(res.data.data)).catch(console.error); };
+  const fetchAll = () => { getAllBookings().then(res => setBookings(res.data)).catch(console.error); };
 
   useEffect(() => {
     // Fetch all bookings for the calendar
