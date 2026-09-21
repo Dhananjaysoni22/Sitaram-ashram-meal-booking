@@ -109,6 +109,11 @@ export default function Home() {
     )
     .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
+  const paginatedUpcoming = upcomingBookings.slice(
+    (upcomingPage - 1) * upcomingLimit,
+    upcomingPage * upcomingLimit
+  );
+
   return (
     <div className="space-y-8 max-w-7xl mx-auto pb-8">
       {/* ---------------- TODAY'S MEALS ---------------- */}
