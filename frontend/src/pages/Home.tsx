@@ -346,108 +346,100 @@ export default function Home() {
             No upcoming bookings yet.
           </p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-            {upcomingBookings.map((b) => (
-              <div
-                key={b.id}
-                className="bg-white rounded-xl shadow-sm border border-[#ece4da] p-4 flex flex-col justify-between gap-4 h-full"
-              >
-                <div>
-                  <div className="flex items-center gap-2 mb-2">
-                    <span className="font-bold text-[#99582a] bg-[#fef7e7] px-2 py-0.5 rounded text-sm">
-                      {format(new Date(b.date), "dd MMM")}
-                    </span>
-                    <span className="text-gray-300">|</span>
-                    <span className="font-semibold text-gray-800 text-sm">
-                      {b.mealType}
-                    </span>
-                  </div>
-                  <div className="flex justify-between">
-                    <p className="text-[14px] text-gray-800 mb-2">
-                      <strong>{b.sponsorName}</strong>
-                    </p>
-                    <button
-                      className="cursor-pointer"
-                      onClick={() => setViewBooking(b)}
-                    >
-                      View
-                    </button>
-                  </div>
-
-                  <div className="text-[11px] text-gray-500 font-medium bg-gray-50 p-2 rounded border border-gray-100 flex flex-wrap gap-x-3 gap-y-1">
-                    <span>
-                      {t("MonksCount")}:{" "}
-                      <strong className="text-gray-800">{b.monksCount}</strong>
-                    </span>
-                    <span>
-                      {t("GuestsCount")}:{" "}
-                      <strong className="text-gray-800">{b.guestsCount}</strong>
-                    </span>
-                    <span>
-                      {t("Total")}:{" "}
-                      <strong className="text-green-700">{b.totalCount}</strong>
-                    </span>
-                  </div>
-                </div>
-
-                <div className="text-[10px] text-gray-400 space-y-0.5 border-t border-gray-100 pt-2">
-                  <p>
-                    Created by:{" "}
-                    <strong>{b.createdByUser?.name || "System"}</strong> •{" "}
-                    {format(
-                      new Date(b.createdAt || Date.now()),
-                      "MMM d, yyyy h:mm a",
-                    )}
-                  </p>
-                  {b.updatedByUser && (
-                    <p>
-                      Last edited by: <strong>{b.updatedByUser.name}</strong>
-                    </p>
-                  )}
-                </div>
-
-                <div className="flex flex-col gap-2 mt-auto">
-                  {canEditBooking && b.status !== "COMPLETED" && (
-                    <>
-                      <button
-                        onClick={() => setEditingBooking(b)}
-                        className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-gray-50 hover:bg-gray-100 text-gray-700 border border-gray-200 rounded-lg text-xs font-bold transition"
-                      >
-                        {t("Edit")}
-                      </button>
-                      <button
-                        className="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 border border-red-200 rounded-xl text-sm font-bold transition shadow-sm"
-                        onClick={() => handleCancel(b.id)}
-                      >
-                        {t("CancelBooking")}
-                      </button>
-                    </>
-                  )}
-                  <button
-                    onClick={() => generatePDF(b)}
-                    className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-[#fdf5e6] hover:bg-[#f5e3cd] text-[#99582a] border border-[#f5e3cd] rounded-lg text-xs font-bold transition mt-auto"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="14"
-                      height="14"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                      <polyline points="7 10 12 15 17 10" />
-                      <line x1="12" x2="12" y1="15" y2="3" />
-                    </svg>
-                    {t("DownloadSlip")}
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+                    <div className="bg-white rounded-2xl border border-[#ece4da] shadow-sm overflow-hidden overflow-x-auto w-full">
+            <table className="w-full text-left border-collapse relative text-sm">
+                <thead className="bg-gray-50">
+                  <tr className="border-b border-[#ece4da]">
+                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">{t('Date')}</th>
+                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">{t('MealType')}</th>
+                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">{t('SponsorName')}</th>
+                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">{t('Counts')}</th>
+                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Extras</th>
+                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">{t('Status')}</th>
+                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">{t('Actions')}</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-[#ece4da]">
+                  {upcomingBookings.map((b) => (
+                    <tr key={b.id} className="hover:bg-gray-50/50 transition-colors">
+                      <td className="px-3 py-3 whitespace-nowrap">
+                        <p className="font-bold text-[#3d2f23]">{format(new Date(b.date), "dd MMM yyyy")}</p>
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap">
+                        <span className="font-bold text-[#99582a]">{t(b.mealType === "BALBHOG" ? "Balbhog" : b.mealType === "RAJBHOG" ? "Rajbhog" : b.mealType === "RAJBHOG_FIRST_FLOOR" ? "RajbhogFF" : b.mealType === "SAYANKALIN_FIRST_FLOOR" ? "SayankalinFF" : "Sayankalin")}</span>
+                      </td>
+                      <td className="px-3 py-3">
+                        <p className="font-bold text-gray-800">{b.sponsorName}</p>
+                        <p className="text-xs text-gray-500">{b.mobileNumber}</p>
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap">
+                        <div className="text-[11px] text-gray-500 font-medium space-x-2">
+                          <span>M: <strong className="text-gray-800">{b.monksCount}</strong></span>
+                          <span>G: <strong className="text-gray-800">{b.guestsCount}</strong></span>
+                          <span>T: <strong className="text-green-700">{b.totalCount}</strong></span>
+                        </div>
+                      </td>
+                      <td className="px-3 py-3 max-w-[200px]">
+                        <div className="flex flex-wrap gap-1 text-[10px]">
+                          {b.waiters > 0 && <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold" title="Waiters">W: {b.waiters}</span>}
+                          {b.valetParking > 0 && <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold" title="Valet">V: {b.valetParking}</span>}
+                          {b.coolers > 0 && <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold" title="Coolers">C: {b.coolers}</span>}
+                          {b.guards > 0 && <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold" title="Guards">G: {b.guards}</span>}
+                          {b.masalchis > 0 && <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold" title="Masalchis">M: {b.masalchis}</span>}
+                          {(!b.waiters && !b.valetParking && !b.coolers && !b.guards && !b.masalchis) && <span className="text-gray-400 font-medium">-</span>}
+                        </div>
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap">
+                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                          b.status === 'PENDING_CONFIRMATION' ? 'bg-yellow-100 text-yellow-700' :
+                          b.status === 'BOOKED' ? 'bg-blue-100 text-blue-700' :
+                          b.status === 'CONFIRMED' ? 'bg-indigo-100 text-indigo-700' :
+                          b.status === 'IN_PROGRESS' ? 'bg-purple-100 text-purple-700' :
+                          b.status === 'COMPLETED' ? 'bg-green-100 text-green-700' :
+                          b.status === 'CANCELLED' ? 'bg-red-100 text-red-700' :
+                          'bg-gray-100 text-gray-700'
+                        }`}>
+                          {t(b.status.charAt(0) + b.status.slice(1).toLowerCase())}
+                        </span>
+                      </td>
+                      <td className="px-3 py-3 whitespace-nowrap text-right">
+                        <div className="flex items-center justify-end gap-1.5">
+                          <button 
+                            onClick={() => setViewBooking(b)}
+                            className="px-2 py-1 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded text-xs font-bold border border-gray-200 transition-colors"
+                          >
+                            View
+                          </button>
+                          {canEditBooking && b.status !== "COMPLETED" && (
+                            <>
+                              <button
+                                onClick={() => setEditingBooking(b)}
+                                className="px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-600 rounded text-xs font-bold border border-blue-200 transition-colors"
+                              >
+                                {t("Edit")}
+                              </button>
+                              <button
+                                onClick={() => handleCancel(b.id)}
+                                className="px-2 py-1 bg-red-50 hover:bg-red-100 text-red-600 rounded text-xs font-bold border border-red-200 transition-colors"
+                              >
+                                Cancel
+                              </button>
+                            </>
+                          )}
+                          <button
+                            onClick={() => generatePDF(b)}
+                            className="px-2 py-1 bg-[#fdf5e6] hover:bg-[#f5e3cd] text-[#99582a] rounded text-xs font-bold border border-[#f5e3cd] transition-colors flex items-center gap-1"
+                            title={t("DownloadSlip")}
+                          >
+                            Slip
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
         )}
       </div>
 
