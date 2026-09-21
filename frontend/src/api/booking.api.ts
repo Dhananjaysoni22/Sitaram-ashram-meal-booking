@@ -23,7 +23,7 @@ export const newBooking = (data: Omit<Booking, "id" | "status">) => {
   return axiosClient.post("/bookings", data);
 };
 export const getReportBookings = (startDate: string, endDate: string, search: string = "", page: number = 1, limit: number = 50) => {
-  return axiosClient.get(`/bookings/report?startDate=&endDate=&search=${search}&page=${page}&limit=${limit}`);
+  return axiosClient.get(`/bookings/report?startDate=${startDate}&endDate=${endDate}&search=${search}&page=${page}&limit=${limit}`);
 };
 
 export const updateBookingStatus = (
