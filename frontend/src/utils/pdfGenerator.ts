@@ -14,7 +14,8 @@ export const generateBookingPDF = (booking: any, t: any) => {
 
   const formattedDate = format(new Date(booking.date), "dd MMMM yyyy");
   doc.text(`Date: ${formattedDate}`, 20, 40);
-  doc.text(`Meal Type: ${booking.mealType}`, 120, 40);
+    const translatedMealType = t(booking.mealType === "BALBHOG" ? "Balbhog" : booking.mealType === "RAJBHOG" ? "Rajbhog" : booking.mealType === "RAJBHOG_FIRST_FLOOR" ? "RajbhogFF" : booking.mealType === "SAYANKALIN_FIRST_FLOOR" ? "SayankalinFF" : "Sayankalin");
+  doc.text(`Meal Type: ${translatedMealType}`, 120, 40);
 
   doc.text(`Bhakt Name: ${booking.sponsorName}`, 20, 50);
   const mobileStr = booking.alternateNumber 
