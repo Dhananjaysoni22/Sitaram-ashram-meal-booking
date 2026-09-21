@@ -4,6 +4,7 @@ import { format, startOfDay } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { jsPDF } from "jspdf";
 import { useAuth } from "../context/AuthContext";
+import { Eye, Edit2, Download } from "lucide-react";
 
 export default function DayBookingsModal({ 
   date, 
@@ -190,11 +191,12 @@ export default function DayBookingsModal({
                     </span>
                   </div>
                   
-                  <div className="flex gap-2 pt-1">
+                  <div className="flex flex-col sm:flex-row gap-2 pt-2 border-t border-gray-100">
                     <button 
                       onClick={() => onViewBooking(booking)}
-                      className="flex-1 py-2 text-sm font-bold bg-white text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 shadow-sm"
+                      className="flex-1 py-2.5 text-sm font-bold bg-white text-gray-700 border border-gray-200 rounded-lg hover:bg-gray-50 shadow-sm flex items-center justify-center gap-2 transition-colors"
                     >
+                      <Eye size={16} />
                       {t("View")}
                     </button>
                     {onEditBooking && 
@@ -204,16 +206,17 @@ export default function DayBookingsModal({
                      new Date(booking.date) >= startOfDay(new Date()) && (
                       <button 
                         onClick={() => onEditBooking(booking)}
-                        className="flex-1 py-2 text-sm font-bold bg-[#fef7e7] text-[#99582a] border border-[#f5e3cd] rounded-lg hover:bg-[#f5e3cd] shadow-sm"
+                        className="flex-1 py-2.5 text-sm font-bold bg-[#fef7e7] text-[#99582a] border border-[#f5e3cd] rounded-lg hover:bg-[#f5e3cd] shadow-sm flex items-center justify-center gap-2 transition-colors"
                       >
+                        <Edit2 size={16} />
                         {t("Edit")}
                       </button>
                     )}
                     <button 
                       onClick={() => generatePDF(booking)}
-                      className="flex-1 py-2 text-sm font-bold bg-blue-50 text-blue-700 border border-blue-200 rounded-lg hover:bg-blue-100 shadow-sm flex items-center justify-center gap-1.5"
+                      className="flex-1 py-2.5 text-sm font-bold bg-blue-50 text-blue-700 border border-blue-200 rounded-lg hover:bg-blue-100 shadow-sm flex items-center justify-center gap-2 transition-colors"
                     >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                      <Download size={16} />
                       {t("DownloadSlip")}
                     </button>
                   </div>
