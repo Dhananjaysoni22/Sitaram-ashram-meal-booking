@@ -92,7 +92,10 @@ export default function Home() {
     doc.text(`Meal Type: ${booking.mealType}`, 120, 40);
 
     doc.text(`Bhakt Name: ${booking.sponsorName}`, 20, 50);
-    doc.text(`Mobile: ${booking.mobileNumber}`, 120, 50);
+    const mobileStr = booking.alternateNumber 
+      ? `Mobile: ${booking.mobileNumber}, ${booking.alternateNumber}`
+      : `Mobile: ${booking.mobileNumber}`;
+    doc.text(mobileStr, 120, 50);
 
     doc.text(`City: ${booking.cityLocation}`, 20, 60);
     doc.text(`Occasion: ${booking.occasion || "-"}`, 120, 60);

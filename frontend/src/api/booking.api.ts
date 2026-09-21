@@ -9,6 +9,7 @@ export interface Booking {
   totalCount: number;
   occasion: string;
   mobileNumber: string;
+  alternateNumber?: string;
   cityLocation: string;
   monksCount: number;
   guestsCount: number;

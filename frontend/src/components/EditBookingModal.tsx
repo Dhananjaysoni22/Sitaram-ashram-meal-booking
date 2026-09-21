@@ -31,6 +31,7 @@ export default function EditBookingModal({
     mealType: "BALBHOG",
     sponsorName: "",
     mobileNumber: "",
+    alternateNumber: "",
     cityLocation: "",
     occasion: "",
     monksCount: 0,
@@ -54,6 +55,7 @@ export default function EditBookingModal({
         mealType: booking.mealType,
         sponsorName: booking.sponsorName || "",
         mobileNumber: booking.mobileNumber || "",
+        alternateNumber: booking.alternateNumber || "",
         cityLocation: booking.cityLocation || "",
         occasion: booking.occasion || "",
         monksCount: booking.monksCount || 0,
@@ -167,7 +169,7 @@ export default function EditBookingModal({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className={labelClass}>{t("SponsorName")}</label>
                 <input
@@ -186,6 +188,17 @@ export default function EditBookingModal({
                   name="mobileNumber"
                   required
                   value={formData.mobileNumber}
+                  onChange={handleChange}
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Alternate Number</label>
+                <input
+                  type="tel"
+                  name="alternateNumber"
+                  placeholder="Optional"
+                  value={formData.alternateNumber}
                   onChange={handleChange}
                   className={inputClass}
                 />

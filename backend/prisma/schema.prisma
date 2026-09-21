@@ -48,6 +48,7 @@ model Booking {
   status              BookingStatus @default(BOOKED)
   sponsorName         String
   mobileNumber        String
+  alternateNumber     String?
   cityLocation        String
   familyName          String?
   occasion            String?

@@ -60,7 +60,7 @@ export default function ViewBookingModal({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className={labelClass}>{t("SponsorName")}</label>
                 <input
@@ -78,6 +78,16 @@ export default function ViewBookingModal({
                   name="mobileNumber"
                   readOnly
                   value={booking.mobileNumber}
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Alternate Number</label>
+                <input
+                  type="tel"
+                  name="alternateNumber"
+                  readOnly
+                  value={booking.alternateNumber || "-"}
                   className={inputClass}
                 />
               </div>

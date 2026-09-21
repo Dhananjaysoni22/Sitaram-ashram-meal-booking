@@ -29,6 +29,7 @@ export default function NewBooking() {
     mealType: "BALBHOG",
     sponsorName: "",
     mobileNumber: "",
+    alternateNumber: "",
     cityLocation: "",
     occasion: "",
     monksCount: 0,
@@ -197,7 +198,7 @@ export default function NewBooking() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className={labelClass}>{t("MobileNumber")}</label>
                 <input
@@ -205,6 +206,16 @@ export default function NewBooking() {
                   name="mobileNumber"
                   required
                   placeholder={t("ExMobile")}
+                  onChange={handleChange}
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label className={labelClass}>Alternate Number</label>
+                <input
+                  type="tel"
+                  name="alternateNumber"
+                  placeholder="Optional"
                   onChange={handleChange}
                   className={inputClass}
                 />
