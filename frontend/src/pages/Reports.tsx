@@ -2,7 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { hi, enUS } from 'date-fns/locale';
-import { getReportBookings } from '../api/booking.api';
+import { getReportBookings, deleteBooking } from '../api/booking.api';
+import { useAuth } from '../context/AuthContext';
+import { Trash2 } from 'lucide-react';
 import { Search, Download } from 'lucide-react';
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
@@ -10,6 +12,7 @@ import autoTable from "jspdf-autotable";
 import ViewBookingModal from '../components/ViewBookingModal';
 
 export default function Reports() {
+  const { user } = useAuth();
   const { t, i18n } = useTranslation();
   const [filteredBookings, setFilteredBookings] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

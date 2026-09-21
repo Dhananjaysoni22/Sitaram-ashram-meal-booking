@@ -37,3 +37,7 @@ export const swapBookings = (date: string, baseMealType: string) => {
   return axiosClient.post(`/bookings/swap/${date}/${baseMealType}`);
 };
 
+
+export const deleteBooking = (id: string) => {
+  return axiosClient.delete(`/bookings/${id}`);
+};

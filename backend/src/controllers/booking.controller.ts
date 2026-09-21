@@ -92,3 +92,9 @@ export const swapBookings = asyncHandler(async (req: Request, res: Response) => 
   res.json({ success: true, message: "Bookings swapped successfully" });
 });
 
+
+export const deleteBooking = asyncHandler(async (req: Request, res: Response) => {
+  const { deleteBookingService } = require("../services/booking.service");
+  await deleteBookingService(req.params.id);
+  res.status(204).json({ status: "success", data: null });
+});

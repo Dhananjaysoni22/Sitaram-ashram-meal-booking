@@ -6,9 +6,10 @@ import {
   updateStatus,
   updateBookingDetails,
   getReportBookings,
-  swapBookings
+  swapBookings,
+  deleteBooking
 } from "../controllers/booking.controller";
-import { protect } from "../middlewares/auth.middleware";
+import { protect, restrictTo } from "../middlewares/auth.middleware";
 
 const router = express.Router();
 
@@ -18,7 +19,7 @@ router.use(protect);
 router.route("/swap/:date/:baseMealType").post(swapBookings);
 router.route("/report").get(getReportBookings);
 router.route("/").get(getAllBookings).post(newBooking);
-router.route("/:id").patch(updateBookingDetails);
+router.route("/:id").patch(updateBookingDetails).delete(restrictTo("SUPER_ADMIN"), deleteBooking);
 router.route("/:id/status").patch(updateStatus);
 
 export default router;

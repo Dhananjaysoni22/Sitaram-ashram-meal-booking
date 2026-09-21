@@ -28,6 +28,7 @@ export interface Booking {
 
 export const getAllBookings = async () => {
   return prisma.booking.findMany({
+    where: { isDeleted: false },
     orderBy: { date: "asc" },
     include: {
       createdByUser: { select: { name: true } },
@@ -108,6 +109,7 @@ export const getReportBookingsInDb = async (
   take?: number
 ) => {
   const where: any = {
+    isDeleted: false,
     date: {
       gte: startDate,
       lte: endDate
@@ -133,4 +135,11 @@ export const getReportBookingsInDb = async (
   ]);
 
   return { data, total, statsData };
+};
+
+export const deleteBookingInDb = async (id: string) => {
+  return await prisma.booking.update({
+    where: { id },
+    data: { isDeleted: true }
+  });
 };

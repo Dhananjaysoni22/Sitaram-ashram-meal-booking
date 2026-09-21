@@ -148,3 +148,8 @@ export const swapBookingsService = async (dateStr: string, baseMealType: string,
   ]);
 };
 
+
+export const deleteBookingService = async (id: string) => {
+  const { deleteBookingInDb } = require("../dal/booking.dal");
+  return await deleteBookingInDb(id);
+};
