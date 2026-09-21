@@ -1,8 +1,9 @@
-﻿
+
 import React from "react";
-import { format } from "date-fns";
+import { format, startOfDay } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { jsPDF } from "jspdf";
+import { useAuth } from "../context/AuthContext";
 
 export default function DayBookingsModal({ 
   date, 
@@ -13,6 +14,7 @@ export default function DayBookingsModal({
   onEditBooking
 }: any) {
   const { t } = useTranslation();
+  const { user } = useAuth();
 
   const generatePDF = (booking: any) => {
     const doc = new jsPDF();
@@ -195,7 +197,11 @@ export default function DayBookingsModal({
                     >
                       {t("View")}
                     </button>
-                    {onEditBooking && booking.status !== "CANCELLED" && (
+                    {onEditBooking && 
+                     booking.status !== "CANCELLED" && 
+                     booking.status !== "COMPLETED" && 
+                     (user?.role === "SUPER_ADMIN" || user?.role === "BOOKING_COORDINATOR") && 
+                     new Date(booking.date) >= startOfDay(new Date()) && (
                       <button 
                         onClick={() => onEditBooking(booking)}
                         className="flex-1 py-2 text-sm font-bold bg-[#fef7e7] text-[#99582a] border border-[#f5e3cd] rounded-lg hover:bg-[#f5e3cd] shadow-sm"
@@ -220,4 +226,8 @@ export default function DayBookingsModal({
     </div>
   );
 }
+
+
+
+
 
