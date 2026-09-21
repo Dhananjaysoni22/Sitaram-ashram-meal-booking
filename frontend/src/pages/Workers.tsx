@@ -5,8 +5,10 @@ import { getWorkerCategories } from "../api/setup.api";
 import { Plus, Edit2, CheckCircle, XCircle, FileText, Trash2 } from "lucide-react";
 import WorkerPaymentsModal from "../components/WorkerPaymentsModal";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 export default function Workers() {
+  const { user } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();
   const [workers, setWorkers] = useState<any[]>([]);
@@ -168,7 +170,7 @@ export default function Workers() {
                         >
                           {t("Edit")}
                         </button>
-                      {true && (
+                      {user?.role === "SUPER_ADMIN" && (
                         <button 
                           onClick={() => handleDelete(w.id)}
                           title="Delete (Set Inactive)"
