@@ -1,4 +1,4 @@
-import { getAllWorkersInDb, createWorkerInDb, updateWorkerInDb, countAllWorkersInDb } from "../dal/worker.dal";
+import { getAllWorkersInDb, createWorkerInDb, updateWorkerInDb, deleteWorkerInDb, countAllWorkersInDb } from "../dal/worker.dal";
 import { getAttendanceByDateInDb, getAttendanceByMonthInDb, upsertAttendanceInDb } from "../dal/attendance.dal";
 import { getPaymentsByWorkerIdInDb, getPaymentsByMonthInDb, createPaymentInDb } from "../dal/payment.dal";
 import { AppError } from "../utils/AppError";
@@ -115,3 +115,4 @@ export const getMonthlyReportService = async (year: number, month: number, limit
 
   return { data: report, total: totalCount };
 };
+export const deleteWorkerService = async (id: string) => { return await deleteWorkerInDb(id); };

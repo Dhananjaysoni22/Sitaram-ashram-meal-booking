@@ -4,6 +4,7 @@ import {
   getAllWorkers,
   createWorker,
   updateWorker,
+  deleteWorker,
   getAttendance,
   checkInWorker,
   checkOutWorker,
@@ -23,7 +24,8 @@ router.route("/")
   .post(createWorker);
 
 router.route("/:id")
-  .patch(updateWorker);
+  .patch(updateWorker)
+  .delete(deleteWorker);
 
 // Attendance routes
 router.route("/attendance")

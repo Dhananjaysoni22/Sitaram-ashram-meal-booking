@@ -4,6 +4,7 @@ import axiosClient from "./axiosClient";
 export const getAllWorkers = () => axiosClient.get("/workers");
 export const createWorker = (data: any) => axiosClient.post("/workers", data);
 export const updateWorker = (id: string, data: any) => axiosClient.patch(`/workers/${id}`, data);
+export const deleteWorker = (id: string) => axiosClient.delete(`/workers/${id}`);
 
 // Attendance
 export const getAttendance = (date: string) => axiosClient.get(`/workers/attendance?date=${date}`);

@@ -97,6 +97,7 @@ model Worker {
   wageType     WageType
   wageRate     Float
   isActive     Boolean      @default(true)
+  isDeleted    Boolean      @default(false)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   

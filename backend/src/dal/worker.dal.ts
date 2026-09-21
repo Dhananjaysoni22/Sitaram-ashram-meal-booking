@@ -2,6 +2,7 @@ import { prisma } from "../config/db";
 
 export const getAllWorkersInDb = async (limit?: number, skip?: number) => {
   return await prisma.worker.findMany({
+    where: { isDeleted: false },
     orderBy: { name: 'asc' },
     take: limit,
     skip: skip
@@ -24,3 +25,4 @@ export const updateWorkerInDb = async (id: string, data: any) => {
     data
   });
 };
+export const deleteWorkerInDb = async (id: string) => { return await prisma.worker.update({ where: { id }, data: { isDeleted: true } }); };

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getAllWorkers, createWorker, updateWorker } from "../api/worker.api";
+import { getAllWorkers, createWorker, updateWorker, deleteWorker } from "../api/worker.api";
 import { getWorkerCategories } from "../api/setup.api";
 import { Plus, Edit2, CheckCircle, XCircle, FileText, Trash2 } from "lucide-react";
 import WorkerPaymentsModal from "../components/WorkerPaymentsModal";
@@ -77,7 +77,7 @@ export default function Workers() {
   const handleDelete = async (workerId: string) => {
     if (window.confirm("Are you sure you want to delete this worker?")) {
       try {
-        await updateWorker(workerId, { isActive: false });
+        await deleteWorker(workerId);
         fetchWorkers();
       } catch (err) {
         console.error(err);
@@ -167,7 +167,7 @@ export default function Workers() {
                       >
                         {t("Edit")}
                       </button>
-                      {w.isActive && (
+                      {true && (
                         <button 
                           onClick={() => handleDelete(w.id)}
                           title="Delete (Set Inactive)"

@@ -65,3 +65,4 @@ export const getMonthlyReport = asyncHandler(async (req: Request, res: Response)
   const result = await workerService.getMonthlyReportService(Number(year), Number(month), limitNum, skipNum);
   res.json({ success: true, data: result.data, total: result.total, page: Number(page) || 1, limit: limitNum });
 });
+export const deleteWorker = asyncHandler(async (req: Request, res: Response) => { const worker = await workerService.deleteWorkerService(req.params.id as string); res.json({ success: true, data: worker }); });
