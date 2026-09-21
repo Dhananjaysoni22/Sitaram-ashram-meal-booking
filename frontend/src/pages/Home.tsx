@@ -348,7 +348,8 @@ export default function Home() {
             No upcoming bookings yet.
           </p>
         ) : (
-                    <div className="bg-white rounded-2xl border border-[#ece4da] shadow-sm overflow-hidden overflow-x-auto w-full">
+          <>
+            <div className="bg-white rounded-2xl border border-[#ece4da] shadow-sm overflow-hidden overflow-x-auto w-full">
             <table className="w-full text-left border-collapse relative text-sm">
                 <thead className="bg-gray-50">
                   <tr className="border-b border-[#ece4da]">
@@ -442,6 +443,44 @@ export default function Home() {
                 </tbody>
               </table>
             </div>
+            {upcomingBookings.length > 0 && (
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-4 pt-4 border-t border-dashed border-[#ece4da]">
+                <div className="text-sm font-bold text-gray-500">
+                  Showing {(upcomingPage - 1) * upcomingLimit + 1} to {Math.min(upcomingPage * upcomingLimit, upcomingBookings.length)} of {upcomingBookings.length}
+                </div>
+                <div className="flex items-center gap-4">
+                  <select 
+                    value={upcomingLimit} 
+                    onChange={(e) => {
+                      setUpcomingLimit(Number(e.target.value));
+                      setUpcomingPage(1);
+                    }}
+                    className="p-2 border border-gray-200 rounded-lg text-sm font-bold focus:border-[#99582a] outline-none"
+                  >
+                    <option value={10}>10 per page</option>
+                    <option value={20}>20 per page</option>
+                    <option value={50}>50 per page</option>
+                  </select>
+                  <div className="flex gap-2">
+                    <button 
+                      disabled={upcomingPage === 1}
+                      onClick={() => setUpcomingPage(p => p - 1)}
+                      className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm font-bold disabled:opacity-50 hover:bg-gray-50"
+                    >
+                      Previous
+                    </button>
+                    <button 
+                      disabled={upcomingPage * upcomingLimit >= upcomingBookings.length}
+                      onClick={() => setUpcomingPage(p => p + 1)}
+                      className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm font-bold disabled:opacity-50 hover:bg-gray-50"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+            </>
         )}
       </div>
 
