@@ -111,7 +111,7 @@ export default function Home() {
 
   const paginatedUpcoming = upcomingBookings.slice(
     (upcomingPage - 1) * upcomingLimit,
-    upcomingPage * upcomingLimit
+    upcomingPage * upcomingLimit,
   );
 
   return (
@@ -354,65 +354,169 @@ export default function Home() {
           </p>
         ) : (
           <>
-            <div className="bg-white rounded-2xl border border-[#ece4da] shadow-sm overflow-hidden overflow-x-auto w-full max-h-[400px] overflow-y-auto">
-            <table className="w-full text-left border-collapse relative text-sm">
+            <div className="bg-white rounded-2xl border border-[#ece4da] shadow-sm overflow-hidden overflow-x-auto w-full max-h-[800px] overflow-y-auto">
+              <table className="w-full text-left border-collapse relative text-sm">
                 <thead className="bg-gray-50 sticky top-0 z-10 shadow-sm">
                   <tr className="border-b border-[#ece4da]">
-                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">{t('Date')}</th>
-                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">{t('MealType')}</th>
-                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">{t('SponsorName')}</th>
-                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">{t('Counts')}</th>
-                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Extras</th>
-                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">{t('Status')}</th>
-                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">{t('Actions')}</th>
+                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      {t("Date")}
+                    </th>
+                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      {t("MealType")}
+                    </th>
+                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      {t("SponsorName")}
+                    </th>
+                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      {t("Counts")}
+                    </th>
+                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      Extras
+                    </th>
+                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">
+                      {t("Status")}
+                    </th>
+                    <th className="px-3 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider text-right">
+                      {t("Actions")}
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-[#ece4da]">
                   {paginatedUpcoming.map((b) => (
-                    <tr key={b.id} className="hover:bg-gray-50/50 transition-colors">
+                    <tr
+                      key={b.id}
+                      className="hover:bg-gray-50/50 transition-colors"
+                    >
                       <td className="px-3 py-3 whitespace-nowrap">
-                        <p className="font-bold text-[#3d2f23]">{format(new Date(b.date), "dd MMM yyyy")}</p>
+                        <p className="font-bold text-[#3d2f23]">
+                          {format(new Date(b.date), "dd MMM yyyy")}
+                        </p>
                       </td>
                       <td className="px-3 py-3 whitespace-nowrap">
-                        <span className="font-bold text-[#99582a]">{t(b.mealType === "BALBHOG" ? "Balbhog" : b.mealType === "RAJBHOG" ? "Rajbhog" : b.mealType === "RAJBHOG_FIRST_FLOOR" ? "RajbhogFF" : b.mealType === "SAYANKALIN_FIRST_FLOOR" ? "SayankalinFF" : "Sayankalin")}</span>
+                        <span className="font-bold text-[#99582a]">
+                          {t(
+                            b.mealType === "BALBHOG"
+                              ? "Balbhog"
+                              : b.mealType === "RAJBHOG"
+                                ? "Rajbhog"
+                                : b.mealType === "RAJBHOG_FIRST_FLOOR"
+                                  ? "RajbhogFF"
+                                  : b.mealType === "SAYANKALIN_FIRST_FLOOR"
+                                    ? "SayankalinFF"
+                                    : "Sayankalin",
+                          )}
+                        </span>
                       </td>
                       <td className="px-3 py-3">
-                        <p className="font-bold text-gray-800">{b.sponsorName}</p>
-                        <p className="text-xs text-gray-500">{b.mobileNumber}</p>
+                        <p className="font-bold text-gray-800">
+                          {b.sponsorName}
+                        </p>
+                        <p className="text-xs text-gray-500">
+                          {b.mobileNumber}
+                        </p>
                       </td>
                       <td className="px-3 py-3 whitespace-nowrap">
                         <div className="text-[11px] text-gray-500 font-medium space-x-2">
-                          <span>M: <strong className="text-gray-800">{b.monksCount}</strong></span>
-                          <span>G: <strong className="text-gray-800">{b.guestsCount}</strong></span>
-                          <span>T: <strong className="text-green-700">{b.totalCount}</strong></span>
+                          <span>
+                            M:{" "}
+                            <strong className="text-gray-800">
+                              {b.monksCount}
+                            </strong>
+                          </span>
+                          <span>
+                            G:{" "}
+                            <strong className="text-gray-800">
+                              {b.guestsCount}
+                            </strong>
+                          </span>
+                          <span>
+                            T:{" "}
+                            <strong className="text-green-700">
+                              {b.totalCount}
+                            </strong>
+                          </span>
                         </div>
                       </td>
                       <td className="px-3 py-3 max-w-[200px]">
                         <div className="flex flex-wrap gap-1 text-[10px]">
-                          {b.waiters > 0 && <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold" title="Waiters">W: {b.waiters}</span>}
-                          {b.valetParking > 0 && <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold" title="Valet">V: {b.valetParking}</span>}
-                          {b.coolers > 0 && <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold" title="Coolers">C: {b.coolers}</span>}
-                          {b.guards > 0 && <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold" title="Guards">G: {b.guards}</span>}
-                          {b.masalchis > 0 && <span className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold" title="Masalchis">M: {b.masalchis}</span>}
-                          {(!b.waiters && !b.valetParking && !b.coolers && !b.guards && !b.masalchis) && <span className="text-gray-400 font-medium">-</span>}
+                          {b.waiters > 0 && (
+                            <span
+                              className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold"
+                              title="Waiters"
+                            >
+                              W: {b.waiters}
+                            </span>
+                          )}
+                          {b.valetParking > 0 && (
+                            <span
+                              className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold"
+                              title="Valet"
+                            >
+                              V: {b.valetParking}
+                            </span>
+                          )}
+                          {b.coolers > 0 && (
+                            <span
+                              className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold"
+                              title="Coolers"
+                            >
+                              C: {b.coolers}
+                            </span>
+                          )}
+                          {b.guards > 0 && (
+                            <span
+                              className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold"
+                              title="Guards"
+                            >
+                              G: {b.guards}
+                            </span>
+                          )}
+                          {b.masalchis > 0 && (
+                            <span
+                              className="bg-gray-100 text-gray-700 px-1.5 py-0.5 rounded border border-gray-200 font-bold"
+                              title="Masalchis"
+                            >
+                              M: {b.masalchis}
+                            </span>
+                          )}
+                          {!b.waiters &&
+                            !b.valetParking &&
+                            !b.coolers &&
+                            !b.guards &&
+                            !b.masalchis && (
+                              <span className="text-gray-400 font-medium">
+                                -
+                              </span>
+                            )}
                         </div>
                       </td>
                       <td className="px-3 py-3 whitespace-nowrap">
-                        <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
-                          b.status === 'PENDING_CONFIRMATION' ? 'bg-yellow-100 text-yellow-700' :
-                          b.status === 'BOOKED' ? 'bg-blue-100 text-blue-700' :
-                          b.status === 'CONFIRMED' ? 'bg-indigo-100 text-indigo-700' :
-                          b.status === 'IN_PROGRESS' ? 'bg-purple-100 text-purple-700' :
-                          b.status === 'COMPLETED' ? 'bg-green-100 text-green-700' :
-                          b.status === 'CANCELLED' ? 'bg-red-100 text-red-700' :
-                          'bg-gray-100 text-gray-700'
-                        }`}>
-                          {t(b.status.charAt(0) + b.status.slice(1).toLowerCase())}
+                        <span
+                          className={`px-2 py-0.5 rounded text-[10px] font-bold ${
+                            b.status === "PENDING_CONFIRMATION"
+                              ? "bg-yellow-100 text-yellow-700"
+                              : b.status === "BOOKED"
+                                ? "bg-blue-100 text-blue-700"
+                                : b.status === "CONFIRMED"
+                                  ? "bg-indigo-100 text-indigo-700"
+                                  : b.status === "IN_PROGRESS"
+                                    ? "bg-purple-100 text-purple-700"
+                                    : b.status === "COMPLETED"
+                                      ? "bg-green-100 text-green-700"
+                                      : b.status === "CANCELLED"
+                                        ? "bg-red-100 text-red-700"
+                                        : "bg-gray-100 text-gray-700"
+                          }`}
+                        >
+                          {t(
+                            b.status.charAt(0) +
+                              b.status.slice(1).toLowerCase(),
+                          )}
                         </span>
                       </td>
                       <td className="px-3 py-3 whitespace-nowrap text-right">
                         <div className="flex items-center justify-end gap-1.5">
-                          <button 
+                          <button
                             onClick={() => setViewBooking(b)}
                             className="px-2 py-1 bg-gray-50 hover:bg-gray-100 text-gray-700 rounded text-xs font-bold border border-gray-200 transition-colors"
                           >
@@ -451,11 +555,16 @@ export default function Home() {
             {upcomingBookings.length > 0 && (
               <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mt-4 pt-4 border-t border-dashed border-[#ece4da]">
                 <div className="text-sm font-bold text-gray-500">
-                  Showing {(upcomingPage - 1) * upcomingLimit + 1} to {Math.min(upcomingPage * upcomingLimit, upcomingBookings.length)} of {upcomingBookings.length}
+                  Showing {(upcomingPage - 1) * upcomingLimit + 1} to{" "}
+                  {Math.min(
+                    upcomingPage * upcomingLimit,
+                    upcomingBookings.length,
+                  )}{" "}
+                  of {upcomingBookings.length}
                 </div>
                 <div className="flex items-center gap-4">
-                  <select 
-                    value={upcomingLimit} 
+                  <select
+                    value={upcomingLimit}
                     onChange={(e) => {
                       setUpcomingLimit(Number(e.target.value));
                       setUpcomingPage(1);
@@ -467,16 +576,18 @@ export default function Home() {
                     <option value={50}>50 per page</option>
                   </select>
                   <div className="flex gap-2">
-                    <button 
+                    <button
                       disabled={upcomingPage === 1}
-                      onClick={() => setUpcomingPage(p => p - 1)}
+                      onClick={() => setUpcomingPage((p) => p - 1)}
                       className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm font-bold disabled:opacity-50 hover:bg-gray-50"
                     >
                       Previous
                     </button>
-                    <button 
-                      disabled={upcomingPage * upcomingLimit >= upcomingBookings.length}
-                      onClick={() => setUpcomingPage(p => p + 1)}
+                    <button
+                      disabled={
+                        upcomingPage * upcomingLimit >= upcomingBookings.length
+                      }
+                      onClick={() => setUpcomingPage((p) => p + 1)}
                       className="px-3 py-1.5 border border-gray-200 rounded-lg text-sm font-bold disabled:opacity-50 hover:bg-gray-50"
                     >
                       Next
@@ -485,7 +596,7 @@ export default function Home() {
                 </div>
               </div>
             )}
-            </>
+          </>
         )}
       </div>
 
