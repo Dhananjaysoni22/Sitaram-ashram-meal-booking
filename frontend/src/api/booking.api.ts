@@ -22,8 +22,8 @@ export const getAllBookings = () => {
 export const newBooking = (data: Omit<Booking, "id" | "status">) => {
   return axiosClient.post("/bookings", data);
 };
-export const getReportBookings = (year: number, month: number, search: string = "", page: number = 1, limit: number = 50) => {
-  return axiosClient.get(`/bookings/report?year=${year}&month=${month}&search=${search}&page=${page}&limit=${limit}`);
+export const getReportBookings = (startDate: string, endDate: string, search: string = "", page: number = 1, limit: number = 50) => {
+  return axiosClient.get(`/bookings/report?startDate=&endDate=&search=${search}&page=${page}&limit=${limit}`);
 };
 
 export const updateBookingStatus = (

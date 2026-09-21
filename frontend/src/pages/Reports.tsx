@@ -16,8 +16,8 @@ export default function Reports() {
   const [viewBooking, setViewBooking] = useState<any>(null);
   
   // Filters
-  const [selectedMonth, setSelectedMonth] = useState(new Date().getMonth());
-  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+  const [startDate, setStartDate] = useState(format(new Date(new Date().getFullYear(), new Date().getMonth(), 1), 'yyyy-MM-dd'));
+  const [endDate, setEndDate] = useState(format(new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0), 'yyyy-MM-dd'));
   const [searchQuery, setSearchQuery] = useState('');
 
   // Pagination
@@ -38,7 +38,7 @@ export default function Reports() {
 
   const fetchReports = () => {
     setLoading(true);
-    getReportBookings(selectedYear, selectedMonth, searchQuery, page, limit)
+    getReportBookings(startDate, endDate, searchQuery, page, limit)
       .then(res => {
         setFilteredBookings(res.data.data);
         setTotal(res.data.total);
@@ -52,12 +52,12 @@ export default function Reports() {
 
   useEffect(() => {
     fetchReports();
-  }, [selectedMonth, selectedYear, searchQuery, page, limit]);
+  }, [startDate, endDate, searchQuery, page, limit]);
 
-  const monthName = format(new Date(selectedYear, selectedMonth, 1), "MMMM");
+  const reportTitle = `${format(new Date(startDate), 'dd MMM yyyy')} to ${format(new Date(endDate), 'dd MMM yyyy')}`;
 
   const exportToExcel = async () => {
-    const res = await getReportBookings(selectedYear, selectedMonth, searchQuery);
+    const res = await getReportBookings(startDate, endDate, searchQuery);
     const fullBookings = res.data.data;
     const data = fullBookings.map((b: any) => ({
       [t("Date")]: format(new Date(b.date), "dd MMM yyyy"),
@@ -67,23 +67,24 @@ export default function Reports() {
       [t("MonksCount")]: b.monksCount,
       [t("GuestsCount")]: b.guestsCount,
       [t("TotalCount")]: b.totalCount,
+      "Extras": [b.waiters ? `Waiters:${b.waiters}` : "", b.valetParking ? `Valet:${b.valetParking}` : "", b.coolers ? `Coolers:${b.coolers}` : "", b.guards ? `Guards:${b.guards}` : "", b.masalchis ? `Masalchis:${b.masalchis}` : ""].filter(Boolean).join(" | "),
       [t("Status")]: t(b.status.charAt(0) + b.status.slice(1).toLowerCase()),
     }));
     
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Bookings Report");
-    XLSX.writeFile(wb, `Bookings_Report_${monthName}_${selectedYear}.xlsx`);
+    XLSX.writeFile(wb, `Bookings_Report_${startDate}_to_${endDate}.xlsx`);
   };
 
   const exportToPDF = async () => {
-    const res = await getReportBookings(selectedYear, selectedMonth, searchQuery);
+    const res = await getReportBookings(startDate, endDate, searchQuery);
     const fullBookings = res.data.data;
     const doc = new jsPDF();
     doc.setFont("helvetica", "bold");
-    doc.text(`Bookings Report - ${monthName} ${selectedYear}`, 14, 20);
+    doc.text(`Bookings Report (${reportTitle})`, 14, 20);
     
-    const head = [[t("Date"), t("MealType"), t("SponsorName"), t("MobileNumber"), t("MonksCount"), t("GuestsCount"), t("TotalCount"), t("Status")]];
+    const head = [[t("Date"), t("MealType"), t("SponsorName"), t("MobileNumber"), t("MonksCount"), t("GuestsCount"), t("TotalCount"), "Extras", t("Status")]];
     const body = fullBookings.map((b: any) => [
       format(new Date(b.date), "dd MMM yyyy"),
       t(b.mealType === "BALBHOG" ? "Balbhog" : b.mealType === "RAJBHOG" ? "Rajbhog" : b.mealType === "RAJBHOG_FIRST_FLOOR" ? "RajbhogFF" : b.mealType === "SAYANKALIN_FIRST_FLOOR" ? "SayankalinFF" : "Sayankalin"),
@@ -103,7 +104,7 @@ export default function Reports() {
       headStyles: { fillColor: [153, 88, 42] }
     });
 
-    doc.save(`Bookings_Report_${monthName}_${selectedYear}.pdf`);
+    doc.save(`Bookings_Report_${startDate}_to_${endDate}.pdf`);
   };
 
   const getStatusColor = (status: string) => {
@@ -141,22 +142,8 @@ export default function Reports() {
               className="w-full pl-9 pr-4 py-2 rounded-xl border border-[#ece4da] focus:border-[#99582a] focus:ring focus:ring-[#99582a]/20 outline-none text-sm transition-all"
             />
           </div>
-          <select 
-            value={selectedMonth} 
-            onChange={(e) => setSelectedMonth(Number(e.target.value))}
-            className="px-4 py-2 rounded-xl border border-[#ece4da] outline-none text-sm font-bold text-[#4a3b2c] bg-white"
-          >
-            {Array.from({length: 12}).map((_, i) => (
-              <option key={i} value={i}>{format(new Date(2024, i, 1), "MMMM", { locale: localeToUse })}</option>
-            ))}
-          </select>
-          <select 
-            value={selectedYear} 
-            onChange={(e) => setSelectedYear(Number(e.target.value))}
-            className="px-4 py-2 rounded-xl border border-[#ece4da] outline-none text-sm font-bold text-[#4a3b2c] bg-white"
-          >
-            {[2024, 2025, 2026, 2027].map(y => <option key={y} value={y}>{y}</option>)}
-          </select>
+          <input type="date" value={startDate} onChange={(e) => setStartDate(e.target.value)} className="px-4 py-2 rounded-xl border border-[#ece4da] outline-none text-sm font-bold text-[#4a3b2c] bg-white" />
+          <input type="date" value={endDate} onChange={(e) => setEndDate(e.target.value)} className="px-4 py-2 rounded-xl border border-[#ece4da] outline-none text-sm font-bold text-[#4a3b2c] bg-white" />
         </div>
       </div>
 
@@ -199,6 +186,7 @@ export default function Reports() {
                   <th className="p-4 text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50">{t('MealType')}</th>
                   <th className="p-4 text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50">{t('SponsorName')}</th>
                   <th className="p-4 text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50">{t('Counts')}</th>
+<th className="p-4 text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50">Extras</th>
                   <th className="p-4 text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50">{t('Status')}</th>
                   <th className="p-4 text-xs font-bold text-gray-500 uppercase tracking-wider text-right bg-gray-50">{t('Actions')}</th>
                 </tr>

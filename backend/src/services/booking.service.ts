@@ -102,14 +102,15 @@ export const updateBookingDetailsService = async (id: string, updateData: any, u
 };
 
 export const getReportBookingsService = async (
-  year: number,
-  month: number,
+  startDateStr: string,
+  endDateStr: string,
   search: string,
   limit?: number,
   skip?: number
 ) => {
-  const startDate = new Date(year, month, 1);
-  const endDate = new Date(year, month + 1, 0, 23, 59, 59, 999);
+  const startDate = new Date(startDateStr);
+  const endDate = new Date(endDateStr);
+  endDate.setHours(23, 59, 59, 999);
 
   const { data, total, statsData } = await getReportBookingsInDb(startDate, endDate, search, skip, limit);
 
