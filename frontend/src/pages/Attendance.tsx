@@ -171,7 +171,7 @@ export default function Attendance() {
                 </div>
               )}
 
-              {user?.role === "SUPER_ADMIN" && (
+              {(isPresent === undefined || user?.role === "SUPER_ADMIN") && (
                 <div className="flex gap-2 border-t border-gray-100 pt-3">
                   <button 
                     onClick={() => handlePresent(worker.id)}
