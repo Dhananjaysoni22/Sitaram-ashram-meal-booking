@@ -1,5 +1,5 @@
 import express from "express";
-import { protect } from "../middlewares/auth.middleware";
+import { protect, authorize } from "../middlewares/auth.middleware";
 import {
   getAllWorkers,
   createWorker,
@@ -31,11 +31,11 @@ router.route("/:id")
 router.route("/attendance")
   .get(getAttendance);
 router.route("/attendance/check-in")
-  .post(checkInWorker);
+  .post(authorize("SUPER_ADMIN"), checkInWorker);
 router.route("/attendance/check-out")
   .post(checkOutWorker);
 router.route("/attendance/absent")
-  .post(markAbsent);
+  .post(authorize("SUPER_ADMIN"), markAbsent);
 
 // Payment routes
 router.route("/payments")

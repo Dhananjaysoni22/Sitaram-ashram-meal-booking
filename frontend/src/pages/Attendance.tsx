@@ -1,21 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { getAllWorkers, getAttendance, checkInWorker, checkOutWorker, markAbsent } from "../api/worker.api";
+import { getAllWorkers, getAttendance, checkInWorker, markAbsent } from "../api/worker.api";
 import { format } from "date-fns";
-import { LogIn, LogOut, XCircle, CheckCircle, Download } from "lucide-react";
+import { XCircle, CheckCircle, Download } from "lucide-react";
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import { useAuth } from "../context/AuthContext";
 
 export default function Attendance() {
   const { t } = useTranslation();
+  const { user } = useAuth();
   const [workers, setWorkers] = useState<any[]>([]);
   const [attendanceRecords, setAttendanceRecords] = useState<any[]>([]);
   const [selectedDate, setSelectedDate] = useState(format(new Date(), "yyyy-MM-dd"));
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
-
-  const isTodayDate = selectedDate === format(new Date(), "yyyy-MM-dd");
 
   useEffect(() => {
     fetchData();
@@ -40,13 +40,8 @@ export default function Attendance() {
     return attendanceRecords.find(a => a.workerId === workerId);
   };
 
-  const handleCheckIn = async (workerId: string) => {
+  const handlePresent = async (workerId: string) => {
     await checkInWorker(workerId, selectedDate);
-    fetchData();
-  };
-
-  const handleCheckOut = async (workerId: string) => {
-    await checkOutWorker(workerId, selectedDate);
     fetchData();
   };
 
@@ -59,21 +54,16 @@ export default function Attendance() {
     return workers.map(worker => {
       const record = getRecord(worker.id);
       const isPresent = record?.isPresent;
-      const hasCheckedIn = !!record?.entryTime;
-      const hasCheckedOut = !!record?.exitTime;
-
+      
       let status = "Not Marked";
-      if (isPresent === false) status = "Absent";
-      else if (hasCheckedOut) status = "Completed";
-      else if (hasCheckedIn) status = "In Progress";
+      if (isPresent === true) status = "Present";
+      else if (isPresent === false) status = "Absent";
 
       return {
         name: worker.name,
         category: worker.category || "-",
         wageType: t(worker.wageType),
         status,
-        inTime: record?.entryTime ? format(new Date(record.entryTime), "hh:mm a") : "-",
-        outTime: record?.exitTime ? format(new Date(record.exitTime), "hh:mm a") : "-",
         wageRate: worker.wageRate
       };
     });
@@ -86,8 +76,6 @@ export default function Attendance() {
       [t("Category")]: r.category,
       [t("WageType")]: r.wageType,
       [t("Status")]: r.status,
-      [t("In")]: r.inTime,
-      [t("Out")]: r.outTime,
       [t("WageRate")]: r.wageRate
     }));
     
@@ -102,15 +90,13 @@ export default function Attendance() {
     doc.setFont("helvetica", "bold");
     doc.text(`Daily Attendance Report - ${format(new Date(selectedDate), "dd MMM yyyy")}`, 14, 20);
     
-    const head = [[t("Name"), t("Category"), t("WageType"), t("Status"), t("In"), t("Out")]];
+    const head = [[t("Name"), t("Category"), t("WageType"), t("Status")]];
     const rawData = getExportData();
     const body = rawData.map(r => [
       r.name,
       r.category,
       r.wageType,
-      r.status,
-      r.inTime,
-      r.outTime
+      r.status
     ]);
 
     autoTable(doc, {
@@ -118,7 +104,7 @@ export default function Attendance() {
       head: head,
       body: body,
       theme: 'grid',
-      headStyles: { fillColor: [153, 88, 42] } // #99582a
+      headStyles: { fillColor: [153, 88, 42] }
     });
 
     doc.save(`Attendance_${selectedDate}.pdf`);
@@ -160,11 +146,9 @@ export default function Attendance() {
         ) : workers.filter(w => w.name.toLowerCase().includes(searchTerm.toLowerCase())).map(worker => {
           const record = getRecord(worker.id);
           const isPresent = record?.isPresent;
-          const hasCheckedIn = !!record?.entryTime;
-          const hasCheckedOut = !!record?.exitTime;
 
           return (
-            <div key={worker.id} className={`p-5 rounded-2xl border ${isPresent === false ? 'bg-red-50/50 border-red-100' : hasCheckedOut ? 'bg-green-50/50 border-green-100' : 'bg-white border-[#ece4da] shadow-sm'} transition-colors relative`}>
+            <div key={worker.id} className={`p-5 rounded-2xl border ${isPresent === false ? 'bg-red-50/50 border-red-100' : isPresent === true ? 'bg-green-50/50 border-green-100' : 'bg-white border-[#ece4da] shadow-sm'} transition-colors relative`}>
               
               <div className="flex justify-between items-start mb-4">
                   <div>
@@ -174,62 +158,33 @@ export default function Attendance() {
                     </p>
                   </div>
                 {isPresent === false && <XCircle className="text-red-400" size={24} />}
-                {hasCheckedOut && <CheckCircle className="text-green-500" size={24} />}
+                {isPresent === true && <CheckCircle className="text-green-500" size={24} />}
               </div>
 
-              {isPresent === false ? (
-                <div className="text-sm font-bold text-red-500 bg-red-100/50 p-2 rounded-lg text-center">
-                  {t("MarkedAbsent")}
+              {isPresent === undefined ? (
+                <div className="text-sm font-bold text-gray-400 bg-gray-50 p-2 rounded-lg text-center mb-3">
+                  Not Marked
                 </div>
-              ) : hasCheckedOut ? (
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs text-gray-600 bg-white p-2 rounded-lg border border-green-100">
-                    <span>{t("In")}: <strong>{format(new Date(record.entryTime), "hh:mm a")}</strong></span>
-                    <span>{t("Out")}: <strong>{format(new Date(record.exitTime), "hh:mm a")}</strong></span>
-                  </div>
-                  <div className="text-sm font-bold text-green-700 bg-green-100/50 p-2 rounded-lg text-center">
-                    {t("TotalHours")}: {record.totalHours} hrs
-                  </div>
+              ) : (
+                <div className={`text-sm font-bold ${isPresent ? 'text-green-600 bg-green-100/50' : 'text-red-500 bg-red-100/50'} p-2 rounded-lg text-center mb-3`}>
+                  {isPresent ? 'Present' : 'Absent'}
                 </div>
-              ) : hasCheckedIn ? (
-                <div className="space-y-3">
-                  <p className="text-xs text-gray-500 flex justify-between bg-gray-50 p-2 rounded-lg">
-                    <span>{t("CheckedInAt")}</span>
-                    <strong className="text-gray-800">{format(new Date(record.entryTime), "hh:mm a")}</strong>
-                  </p>
-                  {isTodayDate && (
-                    <button 
-                      onClick={() => handleCheckOut(worker.id)}
-                      className="w-full flex items-center justify-center py-2.5 bg-orange-500 hover:bg-orange-600 text-white font-bold rounded-xl shadow-sm transition-colors"
-                    >
-                      <LogOut size={16} className="mr-2" /> {t("CheckOut")}
-                    </button>
-                  )}
-                  {!isTodayDate && (
-                    <div className="text-sm font-bold text-orange-500 bg-orange-50 p-2 rounded-lg text-center">
-                      Did not check out
-                    </div>
-                  )}
-                </div>
-              ) : isTodayDate ? (
-                <div className="flex gap-2">
+              )}
+
+              {user?.role === "SUPER_ADMIN" && (
+                <div className="flex gap-2 border-t border-gray-100 pt-3">
                   <button 
-                    onClick={() => handleCheckIn(worker.id)}
-                    className="flex-1 flex items-center justify-center py-2.5 bg-green-500 hover:bg-green-600 text-white font-bold rounded-xl shadow-sm transition-colors"
+                    onClick={() => handlePresent(worker.id)}
+                    className={`flex-1 py-2 font-bold rounded-xl border transition-colors ${isPresent === true ? 'bg-green-500 text-white border-green-600' : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-green-50'}`}
                   >
-                    <LogIn size={16} className="mr-2" /> {t("CheckIn")}
+                    Present
                   </button>
                   <button 
                     onClick={() => handleAbsent(worker.id)}
-                    className="px-4 py-2.5 bg-red-50 hover:bg-red-100 text-red-600 font-bold rounded-xl border border-red-200 transition-colors"
-                    title={t("MarkAbsent")}
+                    className={`flex-1 py-2 font-bold rounded-xl border transition-colors ${isPresent === false ? 'bg-red-500 text-white border-red-600' : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-red-50'}`}
                   >
-                    <XCircle size={18} />
+                    Absent
                   </button>
-                </div>
-              ) : (
-                <div className="text-sm font-bold text-gray-400 bg-gray-50 p-2 rounded-lg text-center">
-                  No Record
                 </div>
               )}
             </div>
