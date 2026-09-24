@@ -1,12 +1,15 @@
 import { jsPDF } from "jspdf";
 import { format } from "date-fns";
-import { headerImageBase64 } from "./headerImage";
 
 export const generateBookingPDF = (booking: any, t: any) => {
   const doc = new jsPDF();
 
-  // Add header image (replacing the Hindi text title)
-  doc.addImage(headerImageBase64, "PNG", 65, 10, 80, 18);
+  // Add Slip title
+  doc.setFontSize(22);
+  doc.setTextColor(0, 0, 0);
+  doc.setFont("helvetica", "bold");
+  doc.text("Slip", 105, 20, { align: "center" });
+  doc.setFont("helvetica", "normal");
 
   // Add Details
   doc.setFontSize(12);
