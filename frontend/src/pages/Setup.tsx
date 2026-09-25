@@ -132,7 +132,7 @@ export default function Setup() {
                 : "text-gray-500 hover:bg-gray-50"
             }`}
           >
-            <Calendar size={16} className="mr-2" /> Calendar Festivals
+            <Calendar size={16} className="mr-2" /> {t("CalendarFestivals")}
           </button>
           <button
             onClick={() => { setActiveTab("occasions"); setError(""); setNewName(""); }}
@@ -152,7 +152,7 @@ export default function Setup() {
                 : "text-gray-500 hover:bg-gray-50"
             }`}
           >
-            <Users size={16} className="mr-2" /> Ashram Categories
+            <Users size={16} className="mr-2" /> {t("AshramCategories")}
           </button>
           <button
             onClick={() => { setActiveTab("mandirCategories"); setError(""); setNewName(""); }}
@@ -162,7 +162,7 @@ export default function Setup() {
                 : "text-gray-500 hover:bg-gray-50"
             }`}
           >
-            <Users size={16} className="mr-2" /> Mandir Categories
+            <Users size={16} className="mr-2" /> {t("MandirCategories")}
           </button>
           <button
             onClick={() => { setActiveTab("roles"); setError(""); setNewName(""); }}
@@ -172,7 +172,7 @@ export default function Setup() {
                 : "text-gray-500 hover:bg-gray-50"
             }`}
           >
-            <UserCog size={16} className="mr-2" /> Custom Roles
+            <UserCog size={16} className="mr-2" /> {t("CustomRoles")}
           </button>
           <button
             onClick={() => { setActiveTab("permissions"); setError(""); setNewName(""); }}
@@ -182,7 +182,7 @@ export default function Setup() {
                 : "text-gray-500 hover:bg-gray-50"
             }`}
           >
-            <Shield size={16} className="mr-2" /> Permissions
+            <Shield size={16} className="mr-2" /> {t("Permissions")}
           </button>
         </div>
 
@@ -212,12 +212,12 @@ export default function Setup() {
                   onChange={(e) => setNewName(e.target.value)}
                   placeholder={
                     activeTab === "festivals"
-                      ? "Enter festival name (e.g. Diwali)"
+                      ? t("EnterFestivalName")
                       : activeTab === "occasions" 
                         ? t("AddOccasionHolder") 
                         : activeTab === "categories"
                           ? t("AddCategoryHolder")
-                          : "Enter role name (e.g. KITCHEN_STAFF)"
+                          : t("EnterRoleName")
                   }
                   className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#99582a] outline-none font-bold text-gray-800"
                 />
@@ -235,7 +235,7 @@ export default function Setup() {
             {/* List */}
             <div>
               <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">
-                {activeTab === "festivals" ? "Existing Festivals" : activeTab === "occasions" ? t("ExistingOccasions") : activeTab === "categories" ? t("ExistingCategories") : "Existing Roles"}
+                {activeTab === "festivals" ? t("ExistingFestivals") : activeTab === "occasions" ? t("ExistingOccasions") : activeTab === "categories" ? t("ExistingCategories") : t("ExistingRoles")}
               </h4>
               
               {currentList.length === 0 ? (
