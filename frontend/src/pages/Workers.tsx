@@ -308,6 +308,9 @@ export default function Workers() { // Ashram Workers
           onClose={() => setPaymentWorker(null)} 
         />
       )}
+          {profileWorkerId && (
+        <WorkerProfileModal workerId={profileWorkerId} onClose={() => setProfileWorkerId(null)} />
+      )}
     </div>
   );
 }

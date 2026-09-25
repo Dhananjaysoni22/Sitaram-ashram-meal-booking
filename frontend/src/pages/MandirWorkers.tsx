@@ -308,6 +308,9 @@ export default function MandirWorkers() {
           onClose={() => setPaymentWorker(null)} 
         />
       )}
+          {profileWorkerId && (
+        <WorkerProfileModal workerId={profileWorkerId} onClose={() => setProfileWorkerId(null)} />
+      )}
     </div>
   );
 }
