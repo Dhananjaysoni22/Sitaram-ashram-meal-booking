@@ -155,7 +155,22 @@ export default function EditBookingModal({
                 )}
               </div>
               <div>
-                <label className={labelClass}>{t("MealType")}</label>
+                {user?.role === "SUPER_ADMIN" && (
+              <div className="mb-4">
+                <label className={labelClass}>{t("Status")}</label>
+                <select
+                  name="status"
+                  value={formData.status}
+                  onChange={handleChange}
+                  className={inputClass}
+                >
+                  <option value="BOOKED">{t("Booked")}</option>
+                  <option value="COMPLETED">{t("Completed")}</option>
+                  <option value="CANCELLED">{t("Cancelled")}</option>
+                </select>
+              </div>
+            )}
+            <label className={labelClass}>{t("MealType")}</label>
                 <select
                   name="mealType"
                   value={formData.mealType}
