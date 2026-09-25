@@ -29,6 +29,7 @@ export default function EditBookingModal({
   const [formData, setFormData] = useState({
     date: "",
     mealType: "BALBHOG",
+    status: "BOOKED",
     sponsorName: "",
     mobileNumber: "",
     alternateNumber: "",
@@ -53,6 +54,7 @@ export default function EditBookingModal({
       setFormData({
         date: format(new Date(booking.date), "yyyy-MM-dd"),
         mealType: booking.mealType,
+        status: booking.status || "BOOKED",
         sponsorName: booking.sponsorName || "",
         mobileNumber: booking.mobileNumber || "",
         alternateNumber: booking.alternateNumber || "",
