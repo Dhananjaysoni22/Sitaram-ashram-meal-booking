@@ -91,6 +91,8 @@ export default function Setup() {
         await deleteOccasion(id);
       } else if (activeTab === "categories") {
         await deleteWorkerCategory(id);
+      } else if (activeTab === "mandirCategories") {
+        await deleteWorkerCategory(id);
       } else if (activeTab === "roles") {
         await deleteRole(id);
       } else if (activeTab === "festivals") {
@@ -106,7 +108,7 @@ export default function Setup() {
     return <div className="p-8 text-center text-red-500 font-bold text-xl">Not Authorized</div>;
   }
 
-  const currentList = activeTab === "occasions" ? occasions : activeTab === "categories" ? categories : activeTab === "festivals" ? festivals : roles;
+  const currentList = activeTab === "occasions" ? occasions : activeTab === "categories" ? categories : activeTab === "mandirCategories" ? mandirCategories : activeTab === "festivals" ? festivals : roles;
 
   return (
     <div className="max-w-4xl mx-auto space-y-6">
@@ -150,7 +152,17 @@ export default function Setup() {
                 : "text-gray-500 hover:bg-gray-50"
             }`}
           >
-            <Users size={16} className="mr-2" /> {t("WorkerCategories")}
+            <Users size={16} className="mr-2" /> Ashram Categories
+          </button>
+          <button
+            onClick={() => { setActiveTab("mandirCategories"); setError(""); setNewName(""); }}
+            className={`flex-1 py-4 px-4 font-bold text-sm flex items-center justify-center transition-colors ${
+              activeTab === "mandirCategories"
+                ? "bg-[#fef7e7] text-[#99582a] border-b-2 border-[#99582a]"
+                : "text-gray-500 hover:bg-gray-50"
+            }`}
+          >
+            <Users size={16} className="mr-2" /> Mandir Categories
           </button>
           <button
             onClick={() => { setActiveTab("roles"); setError(""); setNewName(""); }}

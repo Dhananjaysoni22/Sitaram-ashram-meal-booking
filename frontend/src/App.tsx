@@ -36,6 +36,7 @@ function AppRoutes() {
         <Route path="staff" element={<StaffManagement />} />
         <Route path="reports" element={<Reports />} />
         <Route path="workers" element={<Workers />} />
+        <Route path="mandir-workers" element={<MandirWorkers />} />
         <Route path="attendance" element={<Attendance />} />
         <Route path="workers/reports" element={<WorkerReports />} />
         <Route path="setup" element={<Setup />} />

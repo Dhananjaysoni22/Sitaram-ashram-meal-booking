@@ -5,8 +5,8 @@ import { AppError } from "../utils/AppError";
 import { prisma } from "../config/db";
 
 // ---- Workers ----
-export const getAllWorkersService = async () => {
-  return await getAllWorkersInDb();
+export const getAllWorkersService = async (workerType: string = "ASHRAM") => {
+  return await getAllWorkersInDb(workerType);
 };
 
 export const createWorkerService = async (data: any) => {
@@ -86,14 +86,14 @@ export const addPaymentService = async (workerId: string, amount: number, paymen
 };
 
 // ---- Monthly Report ----
-export const getMonthlyReportService = async (year: number, month: number, limit?: number, skip?: number) => {
+export const getMonthlyReportService = async (year: number, month: number, workerType: string = "ASHRAM", limit?: number, skip?: number) => {
   const startDate = new Date(year, month, 1);
   const endDate = new Date(year, month + 1, 0, 23, 59, 59, 999);
 
   const attendances = await getAttendanceByMonthInDb(startDate, endDate);
   const payments = await getPaymentsByMonthInDb(startDate, endDate);
-  const workers = await getAllWorkersInDb(limit, skip);
-  const totalCount = await countAllWorkersInDb();
+  const workers = await getAllWorkersInDb(workerType, limit, skip);
+  const totalCount = await countAllWorkersInDb(workerType);
 
   // Aggregate
   const report = workers.map(w => {

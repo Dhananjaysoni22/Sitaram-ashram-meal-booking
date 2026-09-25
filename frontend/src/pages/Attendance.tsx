@@ -114,10 +114,24 @@ export default function Attendance() {
   return (
     <div className="space-y-6">
       <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
-        <div>
-          <h2 className="text-2xl font-black text-[#99582a]">{t("DailyAttendance")}</h2>
-          <p className="text-gray-500 text-sm mt-1">{t("AttendanceDesc")}</p>
-        </div>
+          <div>
+            <h2 className="text-2xl font-black text-[#99582a]">{t("DailyAttendance")}</h2>
+            <p className="text-gray-500 text-sm mt-1">{t("AttendanceDesc")}</p>
+            <div className="flex gap-4 mt-4">
+              <button 
+                onClick={() => setActiveTab("ASHRAM")}
+                className={`font-bold pb-1 border-b-2 transition-colors ${activeTab === "ASHRAM" ? "border-[#99582a] text-[#99582a]" : "border-transparent text-gray-400 hover:text-gray-600"}`}
+              >
+                Ashram Workers
+              </button>
+              <button 
+                onClick={() => setActiveTab("MANDIR")}
+                className={`font-bold pb-1 border-b-2 transition-colors ${activeTab === "MANDIR" ? "border-[#99582a] text-[#99582a]" : "border-transparent text-gray-400 hover:text-gray-600"}`}
+              >
+                Mandir Workers
+              </button>
+            </div>
+          </div>
           <div className="flex gap-2 flex-wrap sm:flex-nowrap">
             <button onClick={exportToExcel} className="flex-1 sm:flex-none flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-sm text-sm transition-colors">
               <Download size={16} className="mr-2" /> Excel

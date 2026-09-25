@@ -26,11 +26,11 @@ export const deleteOccasion = asyncHandler(async (req: any, res: any) => {
 });
 
 export const getWorkerCategories = asyncHandler(async (req: any, res: any) => {
-  const data = await getWorkerCategoriesService();
+  const data = await getWorkerCategoriesService(req.query.type as string || "ASHRAM");
   res.json({ success: true, data });
 });
 export const createWorkerCategory = asyncHandler(async (req: any, res: any) => {
-  const data = await createWorkerCategoryService(req.body.name);
+  const data = await createWorkerCategoryService(req.body.name, req.body.type || "ASHRAM");
   res.json({ success: true, data });
 });
 export const deleteWorkerCategory = asyncHandler(async (req: any, res: any) => {

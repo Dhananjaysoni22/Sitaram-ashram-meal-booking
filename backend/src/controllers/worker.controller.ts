@@ -4,7 +4,8 @@ import * as workerService from "../services/worker.service";
 
 // ---- Workers ----
 export const getAllWorkers = asyncHandler(async (req: Request, res: Response) => {
-  const workers = await workerService.getAllWorkersService();
+  const workerType = req.query.workerType as string || "ASHRAM";
+  const workers = await workerService.getAllWorkersService(workerType);
   res.json({ success: true, data: workers });
 });
 
@@ -62,7 +63,8 @@ export const getMonthlyReport = asyncHandler(async (req: Request, res: Response)
   const limitNum = limit ? Number(limit) : undefined;
   const skipNum = (page && limit) ? (Number(page) - 1) * Number(limit) : undefined;
 
-  const result = await workerService.getMonthlyReportService(Number(year), Number(month), limitNum, skipNum);
+  const workerType = req.query.workerType as string || "ASHRAM";
+  const result = await workerService.getMonthlyReportService(Number(year), Number(month), workerType, limitNum, skipNum);
   res.json({ success: true, data: result.data, total: result.total, page: Number(page) || 1, limit: limitNum });
 });
 export const deleteWorker = asyncHandler(async (req: Request, res: Response) => { const worker = await workerService.deleteWorkerService(req.params.id as string); res.json({ success: true, data: worker }); });

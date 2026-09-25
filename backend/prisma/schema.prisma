@@ -94,6 +94,7 @@ enum WageType {
 
 model Worker {
   id           String       @id @default(uuid())
+  workerType   String       @default("ASHRAM")
   name         String
   mobileNumber String?
   wageType     WageType
@@ -118,7 +119,10 @@ model SetupOccasion {
 
 model SetupWorkerCategory {
   id        String   @id @default(uuid())
-  name      String   @unique
+  type      String   @default("ASHRAM")
+  name      String
+
+  @@unique([name, type])
   isActive  Boolean  @default(true)
   createdAt DateTime @default(now())
 }

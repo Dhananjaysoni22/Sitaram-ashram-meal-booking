@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { getMonthlyReport } from "../api/worker.api";
 import { format } from "date-fns";
 import { Calendar, IndianRupee, Clock, CheckCircle, Download } from "lucide-react";
+import { useLocation } from "react-router-dom";
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -15,7 +16,8 @@ export default function WorkerReports() {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth()); // 0-11
-  const [activeTab, setActiveTab] = useState<"ASHRAM" | "MANDIR">("ASHRAM");
+  const location = useLocation();
+  const [activeTab, setActiveTab] = useState<"ASHRAM" | "MANDIR">(location.state?.defaultTab || "ASHRAM");
   
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(50);
@@ -52,7 +54,7 @@ export default function WorkerReports() {
   };
 
   const exportToPDF = async () => {
-    const res = await getMonthlyReport(year, month);
+    const res = await getMonthlyReport(year, month, activeTab);
     const fullReport = res.data.data;
     const doc = new jsPDF();
     doc.setFont("helvetica", "bold");

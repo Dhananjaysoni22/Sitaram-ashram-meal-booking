@@ -30,12 +30,12 @@ export default function MandirWorkers() {
 
   useEffect(() => {
     fetchWorkers();
-    getWorkerCategories().then(res => setCategories(res.data.data)).catch(console.error);
+    getWorkerCategories("MANDIR").then(res => setCategories(res.data.data)).catch(console.error);
   }, []);
 
   const fetchWorkers = () => {
     setLoading(true);
-    getAllWorkers().then((res) => {
+    getAllWorkers("MANDIR").then((res) => {
       setWorkers(res.data.data);
       setLoading(false);
     });
@@ -51,7 +51,7 @@ export default function MandirWorkers() {
       if (editingWorker) {
         await updateWorker(editingWorker.id, data);
       } else {
-        await createWorker(data);
+        await createWorker({...data, workerType: "MANDIR"});
       }
       
       setShowAddModal(false);
@@ -97,7 +97,7 @@ export default function MandirWorkers() {
         </div>
         <div className="flex gap-2">
           <button 
-            onClick={() => navigate("/workers/reports")}
+            onClick={() => navigate("/workers/reports", { state: { defaultTab: "MANDIR" } })}
             className="flex items-center px-4 py-2 bg-[#fdfbf6] text-[#99582a] border border-[#99582a] font-bold rounded-xl shadow-sm hover:bg-[#f5e3cd] transition-all"
           >
             <FileText size={18} className="mr-2" />

@@ -30,12 +30,12 @@ export default function Workers() { // Ashram Workers
 
   useEffect(() => {
     fetchWorkers();
-    getWorkerCategories().then(res => setCategories(res.data.data)).catch(console.error);
+    getWorkerCategories("ASHRAM").then(res => setCategories(res.data.data)).catch(console.error);
   }, []);
 
   const fetchWorkers = () => {
     setLoading(true);
-    getAllWorkers().then((res) => {
+    getAllWorkers("ASHRAM").then((res) => {
       setWorkers(res.data.data);
       setLoading(false);
     });
@@ -51,7 +51,7 @@ export default function Workers() { // Ashram Workers
       if (editingWorker) {
         await updateWorker(editingWorker.id, data);
       } else {
-        await createWorker(data);
+        await createWorker({...data, workerType: "ASHRAM"});
       }
       
       setShowAddModal(false);

@@ -1,16 +1,16 @@
 import { prisma } from "../config/db";
 
-export const getAllWorkersInDb = async (limit?: number, skip?: number) => {
+export const getAllWorkersInDb = async (workerType: string = "ASHRAM", limit?: number, skip?: number) => {
   return await prisma.worker.findMany({
-    where: { isDeleted: false },
+    where: { isDeleted: false, workerType },
     orderBy: { name: 'asc' },
     take: limit,
     skip: skip
   });
 };
 
-export const countAllWorkersInDb = async () => {
-  return await prisma.worker.count();
+export const countAllWorkersInDb = async (workerType: string = "ASHRAM") => {
+  return await prisma.worker.count({ where: { isDeleted: false, workerType } });
 };
 
 export const createWorkerInDb = async (data: any) => {
