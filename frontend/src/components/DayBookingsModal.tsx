@@ -22,6 +22,18 @@ export default function DayBookingsModal({
     generateBookingPDF(booking, t);
   };
 
+  const mealOrder: Record<string, number> = {
+    "BALBHOG": 1,
+    "RAJBHOG": 2,
+    "RAJBHOG_FIRST_FLOOR": 3,
+    "SAYANKALIN": 4,
+    "SAYANKALIN_FIRST_FLOOR": 5
+  };
+
+  const sortedBookings = [...bookings].sort((a: any, b: any) => {
+    return (mealOrder[a.mealType] || 99) - (mealOrder[b.mealType] || 99);
+  });
+
   const getMealDisplayName = (mealType: string) => {
     if (mealType === "BALBHOG") return t("Balbhog");
     if (mealType === "RAJBHOG") return t("Rajbhog");
@@ -67,7 +79,7 @@ export default function DayBookingsModal({
             </div>
           ) : (
             <div className="space-y-4">
-              {bookings.map((booking: any) => (
+              {sortedBookings.map((booking: any) => (
                 <div key={booking.id} className="bg-white rounded-xl shadow-sm border border-[#ece4da] p-4 flex flex-col gap-3">
                   <div className="flex justify-between items-start border-b border-gray-100 pb-3">
                     <div>
