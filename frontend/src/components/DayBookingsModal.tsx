@@ -118,8 +118,7 @@ export default function DayBookingsModal({
                     {onEditBooking && 
                      booking.status !== "CANCELLED" && 
                      booking.status !== "COMPLETED" && 
-                     (user?.role === "SUPER_ADMIN" || user?.role === "BOOKING_COORDINATOR") && 
-                     new Date(booking.date) >= startOfDay(new Date()) && (
+                     (user?.role === "SUPER_ADMIN" || (user?.role === "BOOKING_COORDINATOR" && new Date(booking.date) >= startOfDay(new Date()))) && (
                       <button 
                         onClick={() => onEditBooking(booking)}
                         className="flex-1 py-2.5 text-sm font-bold bg-[#fef7e7] text-[#99582a] border border-[#f5e3cd] rounded-lg hover:bg-[#f5e3cd] shadow-sm flex items-center justify-center gap-2 transition-colors"
