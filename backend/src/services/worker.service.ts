@@ -116,3 +116,29 @@ export const getMonthlyReportService = async (year: number, month: number, worke
   return { data: report, total: totalCount };
 };
 export const deleteWorkerService = async (id: string) => { return await deleteWorkerInDb(id); };
+
+// ---- Single Worker History ----
+export const getWorkerHistoryService = async (workerId: string, year: number, month: number) => {
+  const startDate = new Date(year, month, 1);
+  const endDate = new Date(year, month + 1, 0, 23, 59, 59, 999);
+
+  const attendances = await prisma.attendance.findMany({
+    where: {
+      workerId,
+      date: { gte: startDate, lte: endDate }
+    },
+    orderBy: { date: 'asc' }
+  });
+
+  const payments = await prisma.payment.findMany({
+    where: {
+      workerId,
+      paymentDate: { gte: startDate, lte: endDate }
+    },
+    orderBy: { paymentDate: 'desc' }
+  });
+
+  const worker = await prisma.worker.findUnique({ where: { id: workerId } });
+
+  return { worker, attendances, payments };
+};
