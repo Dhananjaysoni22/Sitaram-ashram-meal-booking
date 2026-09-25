@@ -20,15 +20,15 @@ const deleteOccasion = async (id) => {
     });
 };
 exports.deleteOccasion = deleteOccasion;
-const getWorkerCategories = async () => {
+const getWorkerCategories = async (type = "ASHRAM") => {
     return await db_1.prisma.setupWorkerCategory.findMany({
-        where: { isActive: true },
+        where: { isActive: true, type },
         orderBy: { name: "asc" }
     });
 };
 exports.getWorkerCategories = getWorkerCategories;
-const createWorkerCategory = async (name) => {
-    return await db_1.prisma.setupWorkerCategory.create({ data: { name } });
+const createWorkerCategory = async (name, type = "ASHRAM") => {
+    return await db_1.prisma.setupWorkerCategory.create({ data: { name, type } });
 };
 exports.createWorkerCategory = createWorkerCategory;
 const deleteWorkerCategory = async (id) => {

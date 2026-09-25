@@ -51,6 +51,7 @@ const newBooking = async (payload) => {
         masalchis: payload.masalchis ? Number(payload.masalchis) : 0,
         totalPayment: payload.totalPayment ? Number(payload.totalPayment) : null,
         createdByUser: payload.createdById ? { connect: { id: payload.createdById } } : undefined,
+        paymentMethod: payload.paymentMethod,
     };
     return await db_1.prisma.booking.create({
         data: bookingData,
@@ -72,8 +73,8 @@ const updateBookingStatusInDb = async (id, status) => {
     });
 };
 exports.updateBookingStatusInDb = updateBookingStatusInDb;
-const getReportBookingsInDb = async (startDate, endDate, search, skip, take) => {
-    const where = {
+const getReportBookingsInDb = async (startDate, endDate, search, statusFilter, sortField = 'date', sortOrder = 'asc', skip, take) => {
+    const baseWhere = {
         isDeleted: false,
         date: {
             gte: startDate,
@@ -81,20 +82,39 @@ const getReportBookingsInDb = async (startDate, endDate, search, skip, take) => 
         }
     };
     if (search) {
-        where.OR = [
-            { sponsorName: { contains: search, mode: 'insensitive' } },
-            { mobileNumber: { contains: search } }
+        const s = search.trim();
+        const searchNum = Number(s);
+        baseWhere.OR = [
+            { sponsorName: { contains: s, mode: 'insensitive' } },
+            { mobileNumber: { contains: s } },
+            { cityLocation: { contains: s, mode: 'insensitive' } },
+            { occasion: { contains: s, mode: 'insensitive' } },
+            { alternateNumber: { contains: s } }
         ];
+        if (!isNaN(searchNum) && s !== '') {
+            baseWhere.OR.push({ totalCount: searchNum });
+        }
+    }
+    const tableWhere = { ...baseWhere };
+    if (statusFilter) {
+        tableWhere.status = statusFilter;
+    }
+    const orderByObj = {};
+    if (sortField) {
+        orderByObj[sortField] = sortOrder;
+    }
+    else {
+        orderByObj.date = 'asc';
     }
     const [data, total, statsData] = await Promise.all([
         db_1.prisma.booking.findMany({
-            where,
-            orderBy: { date: 'asc' },
+            where: tableWhere,
+            orderBy: orderByObj,
             skip,
             take
         }),
-        db_1.prisma.booking.count({ where }),
-        db_1.prisma.booking.findMany({ where }) // Easiest way to get all stats for the month since it's typically < 500 bookings
+        db_1.prisma.booking.count({ where: tableWhere }),
+        db_1.prisma.booking.findMany({ where: baseWhere })
     ]);
     return { data, total, statsData };
 };

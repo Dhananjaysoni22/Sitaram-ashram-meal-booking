@@ -9,10 +9,10 @@ exports.getAllBookings = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     res.json(bookings);
 });
 exports.getReportBookings = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
-    const { startDate, endDate, search, page, limit } = req.query;
+    const { startDate, endDate, search, statusFilter, sortField, sortOrder, page, limit } = req.query;
     const limitNum = limit ? Number(limit) : undefined;
     const skipNum = (page && limit) ? (Number(page) - 1) * Number(limit) : undefined;
-    const result = await (0, booking_service_1.getReportBookingsService)(startDate, endDate, search || "", limitNum, skipNum);
+    const result = await (0, booking_service_1.getReportBookingsService)(startDate, endDate, search || "", statusFilter || "", sortField || "date", sortOrder || "asc", limitNum, skipNum);
     res.json({
         success: true,
         data: result.data,

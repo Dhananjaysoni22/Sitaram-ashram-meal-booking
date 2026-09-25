@@ -2,17 +2,17 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.deleteWorkerInDb = exports.updateWorkerInDb = exports.createWorkerInDb = exports.countAllWorkersInDb = exports.getAllWorkersInDb = void 0;
 const db_1 = require("../config/db");
-const getAllWorkersInDb = async (limit, skip) => {
+const getAllWorkersInDb = async (workerType = "ASHRAM", limit, skip) => {
     return await db_1.prisma.worker.findMany({
-        where: { isDeleted: false },
+        where: { isDeleted: false, workerType },
         orderBy: { name: 'asc' },
         take: limit,
         skip: skip
     });
 };
 exports.getAllWorkersInDb = getAllWorkersInDb;
-const countAllWorkersInDb = async () => {
-    return await db_1.prisma.worker.count();
+const countAllWorkersInDb = async (workerType = "ASHRAM") => {
+    return await db_1.prisma.worker.count({ where: { isDeleted: false, workerType } });
 };
 exports.countAllWorkersInDb = countAllWorkersInDb;
 const createWorkerInDb = async (data) => {

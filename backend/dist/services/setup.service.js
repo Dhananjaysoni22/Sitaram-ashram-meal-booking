@@ -8,9 +8,9 @@ const createOccasionService = async (name) => (0, setup_dal_1.createOccasion)(na
 exports.createOccasionService = createOccasionService;
 const deleteOccasionService = async (id) => (0, setup_dal_1.deleteOccasion)(id);
 exports.deleteOccasionService = deleteOccasionService;
-const getWorkerCategoriesService = async () => (0, setup_dal_1.getWorkerCategories)();
+const getWorkerCategoriesService = async (type = "ASHRAM") => (0, setup_dal_1.getWorkerCategories)(type);
 exports.getWorkerCategoriesService = getWorkerCategoriesService;
-const createWorkerCategoryService = async (name) => (0, setup_dal_1.createWorkerCategory)(name);
+const createWorkerCategoryService = async (name, type = "ASHRAM") => (0, setup_dal_1.createWorkerCategory)(name, type);
 exports.createWorkerCategoryService = createWorkerCategoryService;
 const deleteWorkerCategoryService = async (id) => (0, setup_dal_1.deleteWorkerCategory)(id);
 exports.deleteWorkerCategoryService = deleteWorkerCategoryService;

@@ -33,12 +33,13 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteWorker = exports.getMonthlyReport = exports.addPayment = exports.getWorkerPayments = exports.markAbsent = exports.checkOutWorker = exports.checkInWorker = exports.getAttendance = exports.updateWorker = exports.createWorker = exports.getAllWorkers = void 0;
+exports.getWorkerHistory = exports.deleteWorker = exports.getMonthlyReport = exports.addPayment = exports.getWorkerPayments = exports.markAbsent = exports.checkOutWorker = exports.checkInWorker = exports.getAttendance = exports.updateWorker = exports.createWorker = exports.getAllWorkers = void 0;
 const asyncHandler_1 = require("../utils/asyncHandler");
 const workerService = __importStar(require("../services/worker.service"));
 // ---- Workers ----
 exports.getAllWorkers = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
-    const workers = await workerService.getAllWorkersService();
+    const workerType = req.query.workerType || "ASHRAM";
+    const workers = await workerService.getAllWorkersService(workerType);
     res.json({ success: true, data: workers });
 });
 exports.createWorker = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
@@ -85,7 +86,14 @@ exports.getMonthlyReport = (0, asyncHandler_1.asyncHandler)(async (req, res) => 
     const { year, month, page, limit } = req.query; // 0-indexed month
     const limitNum = limit ? Number(limit) : undefined;
     const skipNum = (page && limit) ? (Number(page) - 1) * Number(limit) : undefined;
-    const result = await workerService.getMonthlyReportService(Number(year), Number(month), limitNum, skipNum);
+    const workerType = req.query.workerType || "ASHRAM";
+    const result = await workerService.getMonthlyReportService(Number(year), Number(month), workerType, limitNum, skipNum);
     res.json({ success: true, data: result.data, total: result.total, page: Number(page) || 1, limit: limitNum });
 });
 exports.deleteWorker = (0, asyncHandler_1.asyncHandler)(async (req, res) => { const worker = await workerService.deleteWorkerService(req.params.id); res.json({ success: true, data: worker }); });
+// ---- Single Worker History ----
+exports.getWorkerHistory = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
+    const { year, month } = req.query;
+    const result = await workerService.getWorkerHistoryService(req.params.id, Number(year), Number(month));
+    res.json({ success: true, data: result });
+});

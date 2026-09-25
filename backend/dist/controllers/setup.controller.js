@@ -16,11 +16,11 @@ exports.deleteOccasion = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     res.json({ success: true });
 });
 exports.getWorkerCategories = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
-    const data = await (0, setup_service_1.getWorkerCategoriesService)();
+    const data = await (0, setup_service_1.getWorkerCategoriesService)(req.query.type || "ASHRAM");
     res.json({ success: true, data });
 });
 exports.createWorkerCategory = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
-    const data = await (0, setup_service_1.createWorkerCategoryService)(req.body.name);
+    const data = await (0, setup_service_1.createWorkerCategoryService)(req.body.name, req.body.type || "ASHRAM");
     res.json({ success: true, data });
 });
 exports.deleteWorkerCategory = (0, asyncHandler_1.asyncHandler)(async (req, res) => {

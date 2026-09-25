@@ -104,6 +104,14 @@ export default function NewBooking() {
         guestsCount: Number(formData.guestsCount),
         totalCount: Number(formData.monksCount) + Number(formData.guestsCount),
         coSponsors: "",
+        advanceAmount: formData.advanceAmount ? Number(formData.advanceAmount) : undefined,
+        costPerHead: formData.costPerHead ? Number(formData.costPerHead) : undefined,
+        valetParking: formData.valetParking ? Number(formData.valetParking) : undefined,
+        waiters: formData.waiters ? Number(formData.waiters) : undefined,
+        coolers: formData.coolers ? Number(formData.coolers) : undefined,
+        guards: formData.guards ? Number(formData.guards) : undefined,
+        masalchis: formData.masalchis ? Number(formData.masalchis) : undefined,
+        totalPayment: formData.totalPayment ? Number(formData.totalPayment) : undefined,
       };
       await newBooking(payload);
       navigate("/");

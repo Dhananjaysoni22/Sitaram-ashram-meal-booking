@@ -72,6 +72,6 @@ export const deleteWorker = asyncHandler(async (req: Request, res: Response) => 
 // ---- Single Worker History ----
 export const getWorkerHistory = asyncHandler(async (req: Request, res: Response) => {
   const { year, month } = req.query; 
-  const result = await workerService.getWorkerHistoryService(req.params.id, Number(year), Number(month));
+  const result = await workerService.getWorkerHistoryService(req.params.id as string, Number(year as any), Number(month as any));
   res.json({ success: true, data: result });
 });

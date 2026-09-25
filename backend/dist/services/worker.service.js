@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteWorkerService = exports.getMonthlyReportService = exports.addPaymentService = exports.getWorkerPaymentsService = exports.markAbsentService = exports.checkOutWorkerService = exports.checkInWorkerService = exports.getAttendanceService = exports.updateWorkerService = exports.createWorkerService = exports.getAllWorkersService = void 0;
+exports.getWorkerHistoryService = exports.deleteWorkerService = exports.getMonthlyReportService = exports.addPaymentService = exports.getWorkerPaymentsService = exports.markAbsentService = exports.checkOutWorkerService = exports.checkInWorkerService = exports.getAttendanceService = exports.updateWorkerService = exports.createWorkerService = exports.getAllWorkersService = void 0;
 const worker_dal_1 = require("../dal/worker.dal");
 const attendance_dal_1 = require("../dal/attendance.dal");
 const payment_dal_1 = require("../dal/payment.dal");
 const AppError_1 = require("../utils/AppError");
 const db_1 = require("../config/db");
 // ---- Workers ----
-const getAllWorkersService = async () => {
-    return await (0, worker_dal_1.getAllWorkersInDb)();
+const getAllWorkersService = async (workerType = "ASHRAM") => {
+    return await (0, worker_dal_1.getAllWorkersInDb)(workerType);
 };
 exports.getAllWorkersService = getAllWorkersService;
 const createWorkerService = async (data) => {
@@ -83,13 +83,13 @@ const addPaymentService = async (workerId, amount, paymentDateStr, notes) => {
 };
 exports.addPaymentService = addPaymentService;
 // ---- Monthly Report ----
-const getMonthlyReportService = async (year, month, limit, skip) => {
+const getMonthlyReportService = async (year, month, workerType = "ASHRAM", limit, skip) => {
     const startDate = new Date(year, month, 1);
     const endDate = new Date(year, month + 1, 0, 23, 59, 59, 999);
     const attendances = await (0, attendance_dal_1.getAttendanceByMonthInDb)(startDate, endDate);
     const payments = await (0, payment_dal_1.getPaymentsByMonthInDb)(startDate, endDate);
-    const workers = await (0, worker_dal_1.getAllWorkersInDb)(limit, skip);
-    const totalCount = await (0, worker_dal_1.countAllWorkersInDb)();
+    const workers = await (0, worker_dal_1.getAllWorkersInDb)(workerType, limit, skip);
+    const totalCount = await (0, worker_dal_1.countAllWorkersInDb)(workerType);
     // Aggregate
     const report = workers.map(w => {
         const wAtt = attendances.filter(a => a.workerId === w.id && a.isPresent);
@@ -110,3 +110,25 @@ const getMonthlyReportService = async (year, month, limit, skip) => {
 exports.getMonthlyReportService = getMonthlyReportService;
 const deleteWorkerService = async (id) => { return await (0, worker_dal_1.deleteWorkerInDb)(id); };
 exports.deleteWorkerService = deleteWorkerService;
+// ---- Single Worker History ----
+const getWorkerHistoryService = async (workerId, year, month) => {
+    const startDate = new Date(year, month, 1);
+    const endDate = new Date(year, month + 1, 0, 23, 59, 59, 999);
+    const attendances = await db_1.prisma.attendance.findMany({
+        where: {
+            workerId,
+            date: { gte: startDate, lte: endDate }
+        },
+        orderBy: { date: 'asc' }
+    });
+    const payments = await db_1.prisma.payment.findMany({
+        where: {
+            workerId,
+            paymentDate: { gte: startDate, lte: endDate }
+        },
+        orderBy: { paymentDate: 'desc' }
+    });
+    const worker = await db_1.prisma.worker.findUnique({ where: { id: workerId } });
+    return { worker, attendances, payments };
+};
+exports.getWorkerHistoryService = getWorkerHistoryService;

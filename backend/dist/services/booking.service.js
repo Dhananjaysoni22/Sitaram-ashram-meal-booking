@@ -84,11 +84,11 @@ const updateBookingDetailsService = async (id, updateData, userRole, userId) => 
     });
 };
 exports.updateBookingDetailsService = updateBookingDetailsService;
-const getReportBookingsService = async (startDateStr, endDateStr, search, limit, skip) => {
+const getReportBookingsService = async (startDateStr, endDateStr, search, statusFilter, sortField, sortOrder, limit, skip) => {
     const startDate = new Date(startDateStr);
     const endDate = new Date(endDateStr);
     endDate.setHours(23, 59, 59, 999);
-    const { data, total, statsData } = await (0, booking_dal_1.getReportBookingsInDb)(startDate, endDate, search, skip, limit);
+    const { data, total, statsData } = await (0, booking_dal_1.getReportBookingsInDb)(startDate, endDate, search, statusFilter, sortField, sortOrder, skip, limit);
     const stats = {
         totalBookings: statsData.filter((b) => b.status !== "CANCELLED").length,
         completed: statsData.filter((b) => b.status === "COMPLETED").length,

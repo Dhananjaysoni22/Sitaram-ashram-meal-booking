@@ -32,4 +32,5 @@ router.route("/payments/:workerId")
 // Reports
 router.route("/reports/monthly")
     .get(worker_controller_1.getMonthlyReport);
+router.route("/history/:id").get(worker_controller_1.getWorkerHistory);
 exports.default = router;

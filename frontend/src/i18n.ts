@@ -137,7 +137,7 @@ const resources = {
       // Workers
       Workers: "Workers",
       WorkersDirectory: "Workers Directory",
-      WorkersDesc: "Manage ashram workers and their payments.",
+      WorkersDesc: "Manage workers and their payments.",
       AddWorker: "Add Worker",
       EditWorker: "Edit Worker",
       Name: "Name",
@@ -323,7 +323,7 @@ const resources = {
       // Workers
       Workers: "कार्यकर्ता",
       WorkersDirectory: "कार्यकर्ता निर्देशिका",
-      WorkersDesc: "आश्रम के कार्यकर्ताओं और उनके भुगतान का प्रबंधन करें।",
+      WorkersDesc: "कार्यकर्ताओं और उनके भुगतान का प्रबंधन करें।",
       AddWorker: "कार्यकर्ता जोड़ें",
       EditWorker: "कार्यकर्ता संपादित करें",
       Name: "नाम",
