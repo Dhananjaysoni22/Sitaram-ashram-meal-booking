@@ -16,6 +16,7 @@ export interface Booking {
   specialInstructions: string;
   coSponsors: string;
   advanceAmount: number;
+  paymentMethod?: string;
   costPerHead: number;
   valetParking: number;
   waiters: number;
@@ -76,6 +77,7 @@ export const newBooking = async (payload: Booking) => {
     masalchis: payload.masalchis ? Number(payload.masalchis) : 0,
     totalPayment: payload.totalPayment ? Number(payload.totalPayment) : null,
     createdByUser: payload.createdById ? { connect: { id: payload.createdById } } : undefined,
+      paymentMethod: payload.paymentMethod,
   };
   return await prisma.booking.create({
     data: bookingData,

@@ -15,6 +15,15 @@ export interface Booking {
   guestsCount: number;
   specialInstructions: string;
   coSponsors: string;
+  advanceAmount?: number;
+  costPerHead?: number;
+  paymentMethod?: string;
+  valetParking?: number;
+  waiters?: number;
+  coolers?: number;
+  guards?: number;
+  masalchis?: number;
+  totalPayment?: number;
 }
 export const getAllBookings = () => {
   return axiosClient.get("/bookings");

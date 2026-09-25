@@ -36,6 +36,7 @@ export default function NewBooking() {
     guestsCount: 0,
     specialInstructions: "",
     advanceAmount: "",
+      paymentMethod: "",
     costPerHead: "",
     valetParking: 0,
     waiters: 0,

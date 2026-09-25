@@ -69,6 +69,7 @@ model Booking {
   updatedByUser   User?   @relation("UpdatedByRelation", fields: [updatedById], references: [id])
 
   advanceAmount       Int?
+    paymentMethod       String?
   costPerHead         Int?
   
   // Extra Services (Quantities)

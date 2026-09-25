@@ -9,25 +9,45 @@ import {
   deleteWorkerCategory,
   getRoles,
   createRole,
-  deleteRole
+  deleteRole,
 } from "../api/setup.api";
-import { getAllFestivals, createFestival, deleteFestival } from "../api/calendar.api";
+import {
+  getAllFestivals,
+  createFestival,
+  deleteFestival,
+} from "../api/calendar.api";
 import { format } from "date-fns";
-import { Plus, Trash2, Settings, Users, Star, Shield, UserCog, Calendar } from "lucide-react";
+import {
+  Plus,
+  Trash2,
+  Settings,
+  Users,
+  Star,
+  Shield,
+  UserCog,
+  Calendar,
+} from "lucide-react";
 import { useAuth } from "../context/AuthContext";
 import PermissionsMatrix from "../components/PermissionsMatrix";
 
 export default function Setup() {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<"occasions" | "categories" | "mandirCategories" | "roles" | "permissions" | "festivals">("permissions");
+  const [activeTab, setActiveTab] = useState<
+    | "occasions"
+    | "categories"
+    | "mandirCategories"
+    | "roles"
+    | "permissions"
+    | "festivals"
+  >("permissions");
 
   const [occasions, setOccasions] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
   const [mandirCategories, setMandirCategories] = useState<any[]>([]);
   const [roles, setRoles] = useState<any[]>([]);
   const [festivals, setFestivals] = useState<any[]>([]);
-  
+
   const [newName, setNewName] = useState("");
   const [newDate, setNewDate] = useState("");
   const [loading, setLoading] = useState(false);
@@ -39,13 +59,14 @@ export default function Setup() {
 
   const fetchData = async () => {
     try {
-      const [occRes, catRes, mandirCatRes, roleRes, festRes] = await Promise.all([
-        getOccasions(), 
-        getWorkerCategories("ASHRAM"), 
-        getWorkerCategories("MANDIR"),
-        getRoles(),
-        getAllFestivals()
-      ]);
+      const [occRes, catRes, mandirCatRes, roleRes, festRes] =
+        await Promise.all([
+          getOccasions(),
+          getWorkerCategories("ASHRAM"),
+          getWorkerCategories("MANDIR"),
+          getRoles(),
+          getAllFestivals(),
+        ]);
       setOccasions(occRes.data.data);
       setCategories(catRes.data.data);
       setMandirCategories(mandirCatRes.data.data);
@@ -60,7 +81,7 @@ export default function Setup() {
     e.preventDefault();
     if (!newName.trim()) return;
     if (activeTab === "festivals" && !newDate) return;
-    
+
     setLoading(true);
     setError("");
     try {
@@ -105,27 +126,46 @@ export default function Setup() {
   };
 
   if (user?.role !== "SUPER_ADMIN") {
-    return <div className="p-8 text-center text-red-500 font-bold text-xl">Not Authorized</div>;
+    return (
+      <div className="p-8 text-center text-red-500 font-bold text-xl">
+        Not Authorized
+      </div>
+    );
   }
 
-  const currentList = activeTab === "occasions" ? occasions : activeTab === "categories" ? categories : activeTab === "mandirCategories" ? mandirCategories : activeTab === "festivals" ? festivals : roles;
+  const currentList =
+    activeTab === "occasions"
+      ? occasions
+      : activeTab === "categories"
+        ? categories
+        : activeTab === "mandirCategories"
+          ? mandirCategories
+          : activeTab === "festivals"
+            ? festivals
+            : roles;
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="max-w-8xl mx-auto space-y-6">
       <div className="flex items-center space-x-3 mb-6">
         <Settings className="text-[#99582a]" size={28} />
         <div>
-          <h2 className="text-2xl font-black text-[#3d2f23]">{t("SystemSetup")}</h2>
+          <h2 className="text-2xl font-black text-[#3d2f23]">
+            {t("SystemSetup")}
+          </h2>
           <p className="text-gray-500 text-sm">{t("SystemSetupDesc")}</p>
         </div>
       </div>
 
       <div className="bg-white rounded-2xl shadow-sm border border-[#ece4da] overflow-hidden">
-        
         {/* Tabs */}
         <div className="flex flex-col sm:flex-row border-b border-[#ece4da]">
           <button
-            onClick={() => { setActiveTab("festivals"); setError(""); setNewName(""); setNewDate(""); }}
+            onClick={() => {
+              setActiveTab("festivals");
+              setError("");
+              setNewName("");
+              setNewDate("");
+            }}
             className={`flex-1 py-4 px-4 font-bold text-sm flex items-center justify-center transition-colors ${
               activeTab === "festivals"
                 ? "bg-[#fef7e7] text-[#99582a] border-b-2 border-[#99582a]"
@@ -135,7 +175,11 @@ export default function Setup() {
             <Calendar size={16} className="mr-2" /> {t("CalendarFestivals")}
           </button>
           <button
-            onClick={() => { setActiveTab("occasions"); setError(""); setNewName(""); }}
+            onClick={() => {
+              setActiveTab("occasions");
+              setError("");
+              setNewName("");
+            }}
             className={`flex-1 py-4 px-4 font-bold text-sm flex items-center justify-center transition-colors ${
               activeTab === "occasions"
                 ? "bg-[#fef7e7] text-[#99582a] border-b-2 border-[#99582a]"
@@ -145,7 +189,11 @@ export default function Setup() {
             <Star size={16} className="mr-2" /> {t("SpecialOccasions")}
           </button>
           <button
-            onClick={() => { setActiveTab("categories"); setError(""); setNewName(""); }}
+            onClick={() => {
+              setActiveTab("categories");
+              setError("");
+              setNewName("");
+            }}
             className={`flex-1 py-4 px-4 font-bold text-sm flex items-center justify-center transition-colors ${
               activeTab === "categories"
                 ? "bg-[#fef7e7] text-[#99582a] border-b-2 border-[#99582a]"
@@ -155,7 +203,11 @@ export default function Setup() {
             <Users size={16} className="mr-2" /> {t("AshramCategories")}
           </button>
           <button
-            onClick={() => { setActiveTab("mandirCategories"); setError(""); setNewName(""); }}
+            onClick={() => {
+              setActiveTab("mandirCategories");
+              setError("");
+              setNewName("");
+            }}
             className={`flex-1 py-4 px-4 font-bold text-sm flex items-center justify-center transition-colors ${
               activeTab === "mandirCategories"
                 ? "bg-[#fef7e7] text-[#99582a] border-b-2 border-[#99582a]"
@@ -165,7 +217,11 @@ export default function Setup() {
             <Users size={16} className="mr-2" /> {t("MandirCategories")}
           </button>
           <button
-            onClick={() => { setActiveTab("roles"); setError(""); setNewName(""); }}
+            onClick={() => {
+              setActiveTab("roles");
+              setError("");
+              setNewName("");
+            }}
             className={`flex-1 py-4 px-4 font-bold text-sm flex items-center justify-center transition-colors ${
               activeTab === "roles"
                 ? "bg-[#fef7e7] text-[#99582a] border-b-2 border-[#99582a]"
@@ -175,7 +231,11 @@ export default function Setup() {
             <UserCog size={16} className="mr-2" /> {t("CustomRoles")}
           </button>
           <button
-            onClick={() => { setActiveTab("permissions"); setError(""); setNewName(""); }}
+            onClick={() => {
+              setActiveTab("permissions");
+              setError("");
+              setNewName("");
+            }}
             className={`flex-1 py-4 px-4 font-bold text-sm flex items-center justify-center transition-colors ${
               activeTab === "permissions"
                 ? "bg-[#fef7e7] text-[#99582a] border-b-2 border-[#99582a]"
@@ -193,7 +253,10 @@ export default function Setup() {
         ) : (
           <div className="p-6 md:p-8">
             {/* Add Form */}
-            <form onSubmit={handleCreate} className="flex flex-col sm:flex-row gap-4 mb-8">
+            <form
+              onSubmit={handleCreate}
+              className="flex flex-col sm:flex-row gap-4 mb-8"
+            >
               {activeTab === "festivals" && (
                 <div className="sm:w-48">
                   <input
@@ -213,19 +276,27 @@ export default function Setup() {
                   placeholder={
                     activeTab === "festivals"
                       ? t("EnterFestivalName")
-                      : activeTab === "occasions" 
-                        ? t("AddOccasionHolder") 
+                      : activeTab === "occasions"
+                        ? t("AddOccasionHolder")
                         : activeTab === "categories"
                           ? t("AddCategoryHolder")
                           : t("EnterRoleName")
                   }
                   className="w-full p-3 border-2 border-gray-200 rounded-xl focus:border-[#99582a] outline-none font-bold text-gray-800"
                 />
-                {error && <p className="text-red-500 text-xs mt-1 ml-1 font-bold">{error}</p>}
+                {error && (
+                  <p className="text-red-500 text-xs mt-1 ml-1 font-bold">
+                    {error}
+                  </p>
+                )}
               </div>
               <button
                 type="submit"
-                disabled={loading || !newName.trim() || (activeTab === "festivals" && !newDate)}
+                disabled={
+                  loading ||
+                  !newName.trim() ||
+                  (activeTab === "festivals" && !newDate)
+                }
                 className="px-6 py-3 bg-[#99582a] text-white font-bold rounded-xl shadow-sm hover:bg-[#78431e] disabled:opacity-50 transition-colors flex items-center whitespace-nowrap h-[52px]"
               >
                 <Plus size={18} className="mr-1" /> {t("Add")}
@@ -235,21 +306,34 @@ export default function Setup() {
             {/* List */}
             <div>
               <h4 className="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">
-                {activeTab === "festivals" ? t("ExistingFestivals") : activeTab === "occasions" ? t("ExistingOccasions") : activeTab === "categories" ? t("ExistingCategories") : t("ExistingRoles")}
+                {activeTab === "festivals"
+                  ? t("ExistingFestivals")
+                  : activeTab === "occasions"
+                    ? t("ExistingOccasions")
+                    : activeTab === "categories"
+                      ? t("ExistingCategories")
+                      : t("ExistingRoles")}
               </h4>
-              
+
               {currentList.length === 0 ? (
                 <div className="text-center p-8 border-2 border-dashed border-gray-200 rounded-xl text-gray-400 font-bold">
                   {t("NoRecordsFound")}
                 </div>
               ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {currentList.map(item => (
-                    <div key={item.id} className="flex items-center justify-between p-4 bg-gray-50 border border-gray-200 rounded-xl hover:border-gray-300 transition-colors">
+                  {currentList.map((item) => (
+                    <div
+                      key={item.id}
+                      className="flex items-center justify-between p-4 bg-gray-50 border border-gray-200 rounded-xl hover:border-gray-300 transition-colors"
+                    >
                       <div className="flex flex-col">
-                        <span className="font-bold text-gray-800">{item.name}</span>
+                        <span className="font-bold text-gray-800">
+                          {item.name}
+                        </span>
                         {item.date && (
-                          <span className="text-xs text-gray-500 mt-0.5">{format(new Date(item.date), "MMMM dd, yyyy")}</span>
+                          <span className="text-xs text-gray-500 mt-0.5">
+                            {format(new Date(item.date), "MMMM dd, yyyy")}
+                          </span>
                         )}
                       </div>
                       <button

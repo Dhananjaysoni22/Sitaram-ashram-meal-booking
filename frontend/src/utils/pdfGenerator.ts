@@ -42,7 +42,7 @@ export const generateBookingPDF = (booking: any, t: any) => {
   if (booking.advanceAmount || booking.totalPayment) {
     doc.setFont("helvetica", "bold");
     doc.setTextColor(153, 88, 42);
-    const adv = booking.advanceAmount ? `Advance Payment: Rs. ${booking.advanceAmount}` : "Advance Payment: -";
+    const adv = booking.advanceAmount ? `Advance Payment: Rs. ${booking.advanceAmount}${booking.paymentMethod ? ' (' + booking.paymentMethod + ')' : ''}` : "Advance Payment: -";
     const tot = booking.totalPayment ? `Total Payment: Rs. ${booking.totalPayment}` : "Total Payment: -";
     doc.text(adv, 20, currentY);
     doc.text(tot, 120, currentY);
