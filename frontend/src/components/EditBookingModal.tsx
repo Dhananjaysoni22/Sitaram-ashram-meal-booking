@@ -277,9 +277,9 @@ export default function EditBookingModal({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className={labelClass}>{t("AdvanceAmount")}</label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className={labelClass}>{t("AdvanceAmount")}</label>
                 <input
                   type="number"
                   name="advanceAmount"
@@ -295,12 +295,26 @@ export default function EditBookingModal({
                 <input
                   type="number"
                   name="costPerHead"
-                  value={formData.costPerHead}
-                  onChange={handleChange}
-                  className={inputClass}
-                />
+                    value={formData.costPerHead}
+                    onChange={handleChange}
+                    className={inputClass}
+                  />
+                </div>
+                <div>
+                  <label className={labelClass}>{t("PaymentMethod")}</label>
+                  <select
+                    name="paymentMethod"
+                    value={formData.paymentMethod}
+                    onChange={handleChange}
+                    className={inputClass}
+                  >
+                    <option value="">{t("Select")}</option>
+                    <option value="Cash">{t("Cash")}</option>
+                    <option value="UPI">{t("UPI")}</option>
+                    <option value="Cheque">{t("Cheque")}</option>
+                  </select>
+                </div>
               </div>
-            </div>
             
             <div>
               <label className={labelClass}>{t("TotalPayment")}</label>

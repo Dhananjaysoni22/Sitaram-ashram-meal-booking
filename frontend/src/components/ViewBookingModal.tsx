@@ -139,9 +139,9 @@ export default function ViewBookingModal({
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <label className={labelClass}>{t("AdvanceAmount")}</label>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className={labelClass}>{t("AdvanceAmount")}</label>
                 <input
                   type="number"
                   name="advanceAmount"
@@ -157,6 +157,15 @@ export default function ViewBookingModal({
                   name="costPerHead"
                   readOnly
                   value={booking.costPerHead || ""}
+                  className={inputClass}
+                />
+              </div>
+              <div>
+                <label className={labelClass}>{t("PaymentMethod")}</label>
+                <input
+                  type="text"
+                  value={booking.paymentMethod ? t(booking.paymentMethod) : ""}
+                  readOnly
                   className={inputClass}
                 />
               </div>
