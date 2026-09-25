@@ -195,12 +195,14 @@ export default function Reports() {
               className="pl-9 pr-4 py-2 border-2 border-[#ece4da] rounded-xl focus:border-[#99582a] outline-none font-bold text-[#3d2f23] shadow-sm text-sm w-48 sm:w-64"
             />
           </div>
-          <button onClick={exportToExcel} className="flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-sm text-sm transition-colors">
-            <Download size={16} className="mr-2" /> Excel
-          </button>
-          <button onClick={exportToPDF} className="flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-sm text-sm transition-colors">
-            <Download size={16} className="mr-2" /> PDF
-          </button>
+          <div className="flex gap-2">
+            <button onClick={exportToExcel} className="flex items-center justify-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-sm text-sm transition-colors whitespace-nowrap">
+              <Download size={16} className="mr-2" /> Excel
+            </button>
+            <button onClick={exportToPDF} className="flex items-center justify-center px-4 py-2 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-sm text-sm transition-colors whitespace-nowrap">
+              <Download size={16} className="mr-2" /> PDF
+            </button>
+          </div>
         </div>
       </div>
 
