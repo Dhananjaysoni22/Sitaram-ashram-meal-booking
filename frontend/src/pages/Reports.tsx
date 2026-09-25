@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { hi, enUS } from 'date-fns/locale';
-import { getReportBookings, deleteBooking } from '../api/booking.api';
+import { getReportBookings, deleteBooking, updateBookingStatus } from '../api/booking.api';
 import { useAuth } from '../context/AuthContext';
-import { Trash2, Search, Download, ArrowUp, ArrowDown } from 'lucide-react';
+import { Trash2, Search, Download, ArrowUp, ArrowDown, Check } from 'lucide-react';
 import * as XLSX from "xlsx";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -45,6 +45,17 @@ export default function Reports() {
 
   const isHindi = i18n.language === 'hi';
   const localeToUse = isHindi ? hi : enUS;
+
+  const handleUpdateStatus = async (id: string, status: 'COMPLETED' | 'CANCELLED') => {
+    if (!window.confirm(`Are you sure you want to mark this booking as ${status}?`)) return;
+    try {
+      await updateBookingStatus(id, status);
+      fetchReports();
+    } catch (err) {
+      console.error(err);
+      alert("Failed to update status.");
+    }
+  };
 
   const handleDelete = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this booking?")) return;
