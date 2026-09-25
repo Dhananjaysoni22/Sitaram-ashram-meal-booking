@@ -18,7 +18,7 @@ export const getAllBookings = asyncHandler(
 );
 
 export const getReportBookings = asyncHandler(async (req: Request, res: Response) => {
-  const { startDate, endDate, search, page, limit } = req.query;
+  const { startDate, endDate, search, statusFilter, sortField, sortOrder, page, limit } = req.query;
   const limitNum = limit ? Number(limit) : undefined;
   const skipNum = (page && limit) ? (Number(page) - 1) * Number(limit) : undefined;
 
@@ -26,6 +26,9 @@ export const getReportBookings = asyncHandler(async (req: Request, res: Response
     startDate as string,
     endDate as string,
     search as string || "",
+    statusFilter as string || "",
+    sortField as string || "date",
+    (sortOrder as 'asc'|'desc') || "asc",
     limitNum,
     skipNum
   );

@@ -104,11 +104,14 @@ export const updateBookingStatusInDb = async (
 export const getReportBookingsInDb = async (
   startDate: Date, 
   endDate: Date, 
-  search: string, 
+  search: string,
+  statusFilter?: string,
+  sortField: string = 'date',
+  sortOrder: 'asc' | 'desc' = 'asc',
   skip?: number, 
   take?: number
 ) => {
-  const where: any = {
+  const baseWhere: any = {
     isDeleted: false,
     date: {
       gte: startDate,
@@ -117,21 +120,41 @@ export const getReportBookingsInDb = async (
   };
 
   if (search) {
-    where.OR = [
-      { sponsorName: { contains: search, mode: 'insensitive' } },
-      { mobileNumber: { contains: search } }
+    const s = search.trim();
+    const searchNum = Number(s);
+    baseWhere.OR = [
+      { sponsorName: { contains: s, mode: 'insensitive' } },
+      { mobileNumber: { contains: s } },
+      { cityLocation: { contains: s, mode: 'insensitive' } },
+      { occasion: { contains: s, mode: 'insensitive' } },
+      { alternateNumber: { contains: s } }
     ];
+    if (!isNaN(searchNum) && s !== '') {
+      baseWhere.OR.push({ totalCount: searchNum });
+    }
+  }
+
+  const tableWhere = { ...baseWhere };
+  if (statusFilter) {
+    tableWhere.status = statusFilter;
+  }
+
+  const orderByObj: any = {};
+  if (sortField) {
+    orderByObj[sortField] = sortOrder;
+  } else {
+    orderByObj.date = 'asc';
   }
 
   const [data, total, statsData] = await Promise.all([
     prisma.booking.findMany({
-      where,
-      orderBy: { date: 'asc' },
+      where: tableWhere,
+      orderBy: orderByObj,
       skip,
       take
     }),
-    prisma.booking.count({ where }),
-    prisma.booking.findMany({ where }) // Easiest way to get all stats for the month since it's typically < 500 bookings
+    prisma.booking.count({ where: tableWhere }),
+    prisma.booking.findMany({ where: baseWhere })
   ]);
 
   return { data, total, statsData };

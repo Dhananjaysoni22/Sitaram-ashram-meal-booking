@@ -105,6 +105,9 @@ export const getReportBookingsService = async (
   startDateStr: string,
   endDateStr: string,
   search: string,
+  statusFilter?: string,
+  sortField?: string,
+  sortOrder?: 'asc'|'desc',
   limit?: number,
   skip?: number
 ) => {
@@ -112,7 +115,7 @@ export const getReportBookingsService = async (
   const endDate = new Date(endDateStr);
   endDate.setHours(23, 59, 59, 999);
 
-  const { data, total, statsData } = await getReportBookingsInDb(startDate, endDate, search, skip, limit);
+  const { data, total, statsData } = await getReportBookingsInDb(startDate, endDate, search, statusFilter, sortField, sortOrder, skip, limit);
 
   const stats = {
     totalBookings: statsData.filter((b: any) => b.status !== "CANCELLED").length,
