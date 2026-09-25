@@ -233,7 +233,7 @@ export default function NewBooking() {
                 />
               </div>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div>
                 <label className={labelClass}>{t("AdvanceAmount")}</label>
                 <input
@@ -253,6 +253,19 @@ export default function NewBooking() {
                   onChange={handleChange}
                   className={inputClass}
                 />
+              </div>
+              <div>
+                <label className={labelClass}>{t("PaymentMethod")}</label>
+                <select
+                  name="paymentMethod"
+                  onChange={handleChange}
+                  className={inputClass}
+                >
+                  <option value="">{t("Select")}</option>
+                  <option value="Cash">{t("Cash")}</option>
+                  <option value="UPI">{t("UPI")}</option>
+                  <option value="Cheque">{t("Cheque")}</option>
+                </select>
               </div>
             </div>
             <div>
