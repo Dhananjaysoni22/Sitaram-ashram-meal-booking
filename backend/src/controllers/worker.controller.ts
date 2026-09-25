@@ -68,3 +68,10 @@ export const getMonthlyReport = asyncHandler(async (req: Request, res: Response)
   res.json({ success: true, data: result.data, total: result.total, page: Number(page) || 1, limit: limitNum });
 });
 export const deleteWorker = asyncHandler(async (req: Request, res: Response) => { const worker = await workerService.deleteWorkerService(req.params.id as string); res.json({ success: true, data: worker }); });
+
+// ---- Single Worker History ----
+export const getWorkerHistory = asyncHandler(async (req: Request, res: Response) => {
+  const { year, month } = req.query; 
+  const result = await workerService.getWorkerHistoryService(req.params.id, Number(year), Number(month));
+  res.json({ success: true, data: result });
+});

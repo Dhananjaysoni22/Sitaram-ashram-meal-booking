@@ -11,7 +11,7 @@ import {
   markAbsent,
   getWorkerPayments,
   addPayment,
-  getMonthlyReport
+  getMonthlyReport, getWorkerHistory
 } from "../controllers/worker.controller";
 
 const router = express.Router();
@@ -46,5 +46,7 @@ router.route("/payments/:workerId")
 // Reports
 router.route("/reports/monthly")
   .get(getMonthlyReport);
+
+router.route("/history/:id").get(getWorkerHistory);
 
 export default router;

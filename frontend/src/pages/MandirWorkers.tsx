@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getAllWorkers, createWorker, updateWorker, deleteWorker } from "../api/worker.api";
 import { getWorkerCategories } from "../api/setup.api";
-import { Plus, Edit2, CheckCircle, XCircle, FileText, Trash2 } from "lucide-react";
+import { Plus, Edit2, CheckCircle, XCircle, FileText, Trash2 , Eye } from "lucide-react";
 import WorkerPaymentsModal from "../components/WorkerPaymentsModal";
+import WorkerProfileModal from "../components/WorkerProfileModal";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -17,6 +18,7 @@ export default function MandirWorkers() {
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingWorker, setEditingWorker] = useState<any>(null);
   const [paymentWorker, setPaymentWorker] = useState<any>(null);
+  const [profileWorkerId, setProfileWorkerId] = useState<string | null>(null);
 
   // Form State
   const [formData, setFormData] = useState({
@@ -159,7 +161,14 @@ export default function MandirWorkers() {
                     <td className="p-4 whitespace-nowrap">
                       <div className="flex justify-end items-center gap-2">
                         <button 
-                          onClick={() => setPaymentWorker(w)}
+                          onClick={() => setProfileWorkerId(w.id)}
+                        className="p-2 text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
+                        title="View History"
+                      >
+                        <Eye size={18} />
+                      </button>
+                      <button 
+                        onClick={() => setPaymentWorker(w)}
                           className="px-3 py-1.5 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg text-xs font-bold border border-green-200 transition-colors"
                         >
                           {t("Payments")}
