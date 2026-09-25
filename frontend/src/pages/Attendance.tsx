@@ -56,9 +56,9 @@ export default function Attendance() {
       const record = getRecord(worker.id);
       const isPresent = record?.isPresent;
       
-      let status = "Not Marked";
-      if (isPresent === true) status = "Present";
-      else if (isPresent === false) status = "Absent";
+      let status = t("NotMarked");
+      if (isPresent === true) status = t("Present");
+      else if (isPresent === false) status = t("Absent");
 
       return {
         name: worker.name,
@@ -174,11 +174,11 @@ export default function Attendance() {
                   </div>
                   
                   {isPresent === undefined ? (
-                    <span className="px-2 py-1 rounded text-[10px] font-bold bg-gray-100 text-gray-600">Not Marked</span>
+                    <span className="px-2 py-1 rounded text-[10px] font-bold bg-gray-100 text-gray-600">{t("NotMarked")}</span>
                   ) : isPresent === true ? (
-                    <span className="px-2 py-1 rounded text-[10px] font-bold bg-green-100 text-green-700">Present</span>
+                    <span className="px-2 py-1 rounded text-[10px] font-bold bg-green-100 text-green-700">{t(t("Present"))}</span>
                   ) : (
-                    <span className="px-2 py-1 rounded text-[10px] font-bold bg-red-100 text-red-700">Absent</span>
+                    <span className="px-2 py-1 rounded text-[10px] font-bold bg-red-100 text-red-700">{t(t("Absent"))}</span>
                   )}
                 </div>
 

@@ -163,7 +163,7 @@ export default function MandirWorkers() {
                         <button 
                           onClick={() => setProfileWorkerId(w.id)}
                         className="p-2 text-blue-600 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors"
-                        title="View History"
+                        title={t("ViewHistory")}
                       >
                         <Eye size={18} />
                       </button>

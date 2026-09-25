@@ -53,9 +53,9 @@ export default function WorkerProfileModal({ workerId, onClose }: WorkerProfileM
         {/* Header */}
         <div className="p-6 bg-gradient-to-r from-[#99582a] to-[#804a23] text-white flex justify-between items-center">
           <div>
-            <h2 className="text-2xl font-black">{data?.worker?.name || "Worker Profile"}</h2>
+            <h2 className="text-2xl font-black">{data?.worker?.name || t("WorkerProfile")}</h2>
             <div className="flex gap-4 mt-2 text-white/80 text-sm font-medium">
-              <span>{data?.worker?.category || "No Category"}</span>
+              <span>{data?.worker?.category || t("NoCategory")}</span>
               <span>•</span>
               <span>{t(data?.worker?.wageType)}</span>
             </div>
@@ -149,9 +149,9 @@ export default function WorkerProfileModal({ workerId, onClose }: WorkerProfileM
                 </div>
                 
                 <div className="flex gap-4 mt-6 justify-center">
-                  <div className="flex items-center gap-2 text-xs font-bold text-gray-500"><div className="w-3 h-3 rounded-full bg-green-500"></div> Present</div>
-                  <div className="flex items-center gap-2 text-xs font-bold text-gray-500"><div className="w-3 h-3 rounded-full bg-red-500"></div> Absent</div>
-                  <div className="flex items-center gap-2 text-xs font-bold text-gray-500"><div className="w-3 h-3 rounded-full bg-gray-200"></div> Not Marked</div>
+                  <div className="flex items-center gap-2 text-xs font-bold text-gray-500"><div className="w-3 h-3 rounded-full bg-green-500"></div> {t("Present")}</div>
+                  <div className="flex items-center gap-2 text-xs font-bold text-gray-500"><div className="w-3 h-3 rounded-full bg-red-500"></div> {t("Absent")}</div>
+                  <div className="flex items-center gap-2 text-xs font-bold text-gray-500"><div className="w-3 h-3 rounded-full bg-gray-200"></div> {t("NotMarked")}</div>
                 </div>
               </div>
 
