@@ -22,8 +22,11 @@ export const getAllBookings = () => {
 export const newBooking = (data: Omit<Booking, "id" | "status">) => {
   return axiosClient.post("/bookings", data);
 };
-export const getReportBookings = (startDate: string, endDate: string, search: string = "", page: number = 1, limit: number = 50) => {
-  return axiosClient.get(`/bookings/report?startDate=${startDate}&endDate=${endDate}&search=${search}&page=${page}&limit=${limit}`);
+export const getReportBookings = (startDate: string, endDate: string, search: string = "", statusFilter: string = "", sortField: string = "date", sortOrder: string = "asc", page?: number, limit?: number) => {
+  let url = `/bookings/report?startDate=${startDate}&endDate=${endDate}&search=${search}&statusFilter=${statusFilter}&sortField=${sortField}&sortOrder=${sortOrder}`;
+  if (page) url += `&page=${page}`;
+  if (limit) url += `&limit=${limit}`;
+  return axiosClient.get(url);
 };
 
 export const updateBookingStatus = (

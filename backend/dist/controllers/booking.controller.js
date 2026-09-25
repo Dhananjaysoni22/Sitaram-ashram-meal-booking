@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.swapBookings = exports.updateBookingDetails = exports.updateStatus = exports.newBooking = exports.getReportBookings = exports.getAllBookings = void 0;
+exports.deleteBooking = exports.swapBookings = exports.updateBookingDetails = exports.updateStatus = exports.newBooking = exports.getReportBookings = exports.getAllBookings = void 0;
 const booking_service_1 = require("../services/booking.service");
 const AppError_1 = require("../utils/AppError");
 const asyncHandler_1 = require("../utils/asyncHandler");
@@ -9,10 +9,10 @@ exports.getAllBookings = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     res.json(bookings);
 });
 exports.getReportBookings = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
-    const { year, month, search, page, limit } = req.query;
+    const { startDate, endDate, search, page, limit } = req.query;
     const limitNum = limit ? Number(limit) : undefined;
     const skipNum = (page && limit) ? (Number(page) - 1) * Number(limit) : undefined;
-    const result = await (0, booking_service_1.getReportBookingsService)(Number(year), Number(month), search || "", limitNum, skipNum);
+    const result = await (0, booking_service_1.getReportBookingsService)(startDate, endDate, search || "", limitNum, skipNum);
     res.json({
         success: true,
         data: result.data,
@@ -61,4 +61,9 @@ exports.swapBookings = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
     const { date, baseMealType } = req.params;
     await (0, booking_service_1.swapBookingsService)(date, baseMealType, user.id);
     res.json({ success: true, message: "Bookings swapped successfully" });
+});
+exports.deleteBooking = (0, asyncHandler_1.asyncHandler)(async (req, res) => {
+    const { deleteBookingService } = require("../services/booking.service");
+    await deleteBookingService(req.params.id);
+    res.status(204).json({ status: "success", data: null });
 });

@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from 'react';
+const fs = require('fs');
+
+const content = `import React, { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { format } from 'date-fns';
 import { hi, enUS } from 'date-fns/locale';
@@ -75,7 +77,7 @@ export default function Reports() {
     fetchReports();
   }, [startDate, endDate, searchQuery, statusFilter, sortField, sortOrder, page, limit]);
 
-  const reportTitle = `${format(new Date(startDate), 'dd MMM yyyy')} to ${format(new Date(endDate), 'dd MMM yyyy')}`;
+  const reportTitle = \`\${format(new Date(startDate), 'dd MMM yyyy')} to \${format(new Date(endDate), 'dd MMM yyyy')}\`;
 
   const exportToExcel = async () => {
     const res = await getReportBookings(startDate, endDate, searchQuery, statusFilter, sortField, sortOrder, 1, 100000);
@@ -95,7 +97,7 @@ export default function Reports() {
     const ws = XLSX.utils.json_to_sheet(data);
     const wb = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, "Bookings Report");
-    XLSX.writeFile(wb, `Bookings_Report_${startDate}_to_${endDate}.xlsx`);
+    XLSX.writeFile(wb, \`Bookings_Report_\${startDate}_to_\${endDate}.xlsx\`);
   };
 
   const exportToPDF = async () => {
@@ -104,11 +106,11 @@ export default function Reports() {
     const doc = new jsPDF();
     
     doc.setFontSize(16);
-    doc.text(`Bookings Report (${reportTitle})`, 14, 20);
+    doc.text(\`Bookings Report (\${reportTitle})\`, 14, 20);
     
     doc.setFontSize(10);
-    doc.text(`Total Valid Bookings: ${stats.totalBookings}`, 14, 28);
-    doc.text(`Monks: ${stats.totalMonks} | Guests: ${stats.totalGuests}`, 14, 34);
+    doc.text(\`Total Valid Bookings: \${stats.totalBookings}\`, 14, 28);
+    doc.text(\`Monks: \${stats.totalMonks} | Guests: \${stats.totalGuests}\`, 14, 34);
 
     const head = [["Date", "Meal Type", "Sponsor", "Mobile", "Monks", "Guests", "Total", "Status", "Extras"]];
     const body = fullBookings.map((b: any) => [
@@ -120,7 +122,7 @@ export default function Reports() {
       b.status === "CANCELLED" ? "0" : String(b.guestsCount),
       b.status === "CANCELLED" ? "0" : String(b.totalCount),
       b.status,
-      `W:${b.waiters||0} V:${b.valetParking||0} C:${b.coolers||0} G:${b.guards||0} M:${b.masalchis||0}`
+      \`W:\${b.waiters||0} V:\${b.valetParking||0} C:\${b.coolers||0} G:\${b.guards||0} M:\${b.masalchis||0}\`
     ]);
 
     autoTable(doc, {
@@ -132,7 +134,7 @@ export default function Reports() {
       styles: { fontSize: 7, cellPadding: 1 }
     });
 
-    doc.save(`Bookings_Report_${startDate}_to_${endDate}.pdf`);
+    doc.save(\`Bookings_Report_\${startDate}_to_\${endDate}.pdf\`);
   };
 
   const getStatusColor = (status: string) => {
@@ -207,21 +209,21 @@ export default function Reports() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <div 
           onClick={() => setStatusFilter('')} 
-          className={`bg-white p-5 rounded-2xl border-2 shadow-sm cursor-pointer transition-all ${statusFilter === '' ? 'border-[#99582a] ring-2 ring-[#99582a]/20' : 'border-[#ece4da] hover:border-[#99582a]'}`}
+          className={\`bg-white p-5 rounded-2xl border-2 shadow-sm cursor-pointer transition-all \${statusFilter === '' ? 'border-[#99582a] ring-2 ring-[#99582a]/20' : 'border-[#ece4da] hover:border-[#99582a]'}\`}
         >
           <p className="text-gray-500 font-bold mb-1">{t('TotalBookings')}</p>
           <p className="text-3xl font-black text-[#3d2f23]">{stats.totalBookings}</p>
         </div>
         <div 
           onClick={() => setStatusFilter('COMPLETED')}
-          className={`bg-green-50 p-5 rounded-2xl border-2 shadow-sm cursor-pointer transition-all ${statusFilter === 'COMPLETED' ? 'border-green-600 ring-2 ring-green-600/20' : 'border-green-100 hover:border-green-400'}`}
+          className={\`bg-green-50 p-5 rounded-2xl border-2 shadow-sm cursor-pointer transition-all \${statusFilter === 'COMPLETED' ? 'border-green-600 ring-2 ring-green-600/20' : 'border-green-100 hover:border-green-400'}\`}
         >
           <p className="text-green-700 font-bold mb-1">{t('Completed')}</p>
           <p className="text-3xl font-black text-green-800">{stats.completed}</p>
         </div>
         <div 
           onClick={() => setStatusFilter('CANCELLED')}
-          className={`bg-red-50 p-5 rounded-2xl border-2 shadow-sm cursor-pointer transition-all ${statusFilter === 'CANCELLED' ? 'border-red-600 ring-2 ring-red-600/20' : 'border-red-100 hover:border-red-400'}`}
+          className={\`bg-red-50 p-5 rounded-2xl border-2 shadow-sm cursor-pointer transition-all \${statusFilter === 'CANCELLED' ? 'border-red-600 ring-2 ring-red-600/20' : 'border-red-100 hover:border-red-400'}\`}
         >
           <p className="text-red-700 font-bold mb-1">{t('Cancelled')}</p>
           <p className="text-3xl font-black text-red-800">{stats.cancelled}</p>
@@ -333,7 +335,7 @@ export default function Reports() {
                       </div>
                     </td>
                     <td className="p-4 whitespace-nowrap">
-                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold ${getStatusColor(b.status)}`}>
+                      <span className={\`px-2.5 py-1 rounded-full text-[10px] font-bold \${getStatusColor(b.status)}\`}>
                         {t(b.status.charAt(0) + b.status.slice(1).toLowerCase())}
                       </span>
                     </td>
@@ -409,3 +411,7 @@ export default function Reports() {
     </div>
   );
 }
+`;
+
+fs.writeFileSync('frontend/src/pages/Reports.tsx', content);
+console.log("Replaced Reports.tsx");

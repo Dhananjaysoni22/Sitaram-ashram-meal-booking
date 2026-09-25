@@ -1,9 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updateWorkerInDb = exports.createWorkerInDb = exports.countAllWorkersInDb = exports.getAllWorkersInDb = void 0;
+exports.deleteWorkerInDb = exports.updateWorkerInDb = exports.createWorkerInDb = exports.countAllWorkersInDb = exports.getAllWorkersInDb = void 0;
 const db_1 = require("../config/db");
 const getAllWorkersInDb = async (limit, skip) => {
     return await db_1.prisma.worker.findMany({
+        where: { isDeleted: false },
         orderBy: { name: 'asc' },
         take: limit,
         skip: skip
@@ -27,3 +28,5 @@ const updateWorkerInDb = async (id, data) => {
     });
 };
 exports.updateWorkerInDb = updateWorkerInDb;
+const deleteWorkerInDb = async (id) => { return await db_1.prisma.worker.update({ where: { id }, data: { isDeleted: true } }); };
+exports.deleteWorkerInDb = deleteWorkerInDb;

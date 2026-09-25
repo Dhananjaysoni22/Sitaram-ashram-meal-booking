@@ -12,6 +12,6 @@ router.use(auth_middleware_1.protect);
 router.route("/swap/:date/:baseMealType").post(booking_controller_1.swapBookings);
 router.route("/report").get(booking_controller_1.getReportBookings);
 router.route("/").get(booking_controller_1.getAllBookings).post(booking_controller_1.newBooking);
-router.route("/:id").patch(booking_controller_1.updateBookingDetails);
+router.route("/:id").patch(booking_controller_1.updateBookingDetails).delete((0, auth_middleware_1.authorize)("SUPER_ADMIN"), booking_controller_1.deleteBooking);
 router.route("/:id/status").patch(booking_controller_1.updateStatus);
 exports.default = router;

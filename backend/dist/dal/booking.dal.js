@@ -1,10 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getReportBookingsInDb = exports.updateBookingStatusInDb = exports.newBooking = exports.findBookingByDateAndMeal = exports.getAllBookings = void 0;
+exports.deleteBookingInDb = exports.getReportBookingsInDb = exports.updateBookingStatusInDb = exports.newBooking = exports.findBookingByDateAndMeal = exports.getAllBookings = void 0;
 const client_1 = require("@prisma/client");
 const db_1 = require("../config/db");
 const getAllBookings = async () => {
     return db_1.prisma.booking.findMany({
+        where: { isDeleted: false },
         orderBy: { date: "asc" },
         include: {
             createdByUser: { select: { name: true } },
@@ -73,6 +74,7 @@ const updateBookingStatusInDb = async (id, status) => {
 exports.updateBookingStatusInDb = updateBookingStatusInDb;
 const getReportBookingsInDb = async (startDate, endDate, search, skip, take) => {
     const where = {
+        isDeleted: false,
         date: {
             gte: startDate,
             lte: endDate
@@ -97,3 +99,10 @@ const getReportBookingsInDb = async (startDate, endDate, search, skip, take) => 
     return { data, total, statsData };
 };
 exports.getReportBookingsInDb = getReportBookingsInDb;
+const deleteBookingInDb = async (id) => {
+    return await db_1.prisma.booking.update({
+        where: { id },
+        data: { isDeleted: true }
+    });
+};
+exports.deleteBookingInDb = deleteBookingInDb;

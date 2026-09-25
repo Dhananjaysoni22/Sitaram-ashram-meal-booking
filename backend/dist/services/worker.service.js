@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMonthlyReportService = exports.addPaymentService = exports.getWorkerPaymentsService = exports.markAbsentService = exports.checkOutWorkerService = exports.checkInWorkerService = exports.getAttendanceService = exports.updateWorkerService = exports.createWorkerService = exports.getAllWorkersService = void 0;
+exports.deleteWorkerService = exports.getMonthlyReportService = exports.addPaymentService = exports.getWorkerPaymentsService = exports.markAbsentService = exports.checkOutWorkerService = exports.checkInWorkerService = exports.getAttendanceService = exports.updateWorkerService = exports.createWorkerService = exports.getAllWorkersService = void 0;
 const worker_dal_1 = require("../dal/worker.dal");
 const attendance_dal_1 = require("../dal/attendance.dal");
 const payment_dal_1 = require("../dal/payment.dal");
@@ -108,3 +108,5 @@ const getMonthlyReportService = async (year, month, limit, skip) => {
     return { data: report, total: totalCount };
 };
 exports.getMonthlyReportService = getMonthlyReportService;
+const deleteWorkerService = async (id) => { return await (0, worker_dal_1.deleteWorkerInDb)(id); };
+exports.deleteWorkerService = deleteWorkerService;

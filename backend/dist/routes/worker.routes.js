@@ -13,7 +13,8 @@ router.route("/")
     .get(worker_controller_1.getAllWorkers)
     .post(worker_controller_1.createWorker);
 router.route("/:id")
-    .patch(worker_controller_1.updateWorker);
+    .patch(worker_controller_1.updateWorker)
+    .delete(worker_controller_1.deleteWorker);
 // Attendance routes
 router.route("/attendance")
     .get(worker_controller_1.getAttendance);

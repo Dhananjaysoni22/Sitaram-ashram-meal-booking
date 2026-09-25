@@ -33,7 +33,7 @@ var __importStar = (this && this.__importStar) || (function () {
     };
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMonthlyReport = exports.addPayment = exports.getWorkerPayments = exports.markAbsent = exports.checkOutWorker = exports.checkInWorker = exports.getAttendance = exports.updateWorker = exports.createWorker = exports.getAllWorkers = void 0;
+exports.deleteWorker = exports.getMonthlyReport = exports.addPayment = exports.getWorkerPayments = exports.markAbsent = exports.checkOutWorker = exports.checkInWorker = exports.getAttendance = exports.updateWorker = exports.createWorker = exports.getAllWorkers = void 0;
 const asyncHandler_1 = require("../utils/asyncHandler");
 const workerService = __importStar(require("../services/worker.service"));
 // ---- Workers ----
@@ -88,3 +88,4 @@ exports.getMonthlyReport = (0, asyncHandler_1.asyncHandler)(async (req, res) => 
     const result = await workerService.getMonthlyReportService(Number(year), Number(month), limitNum, skipNum);
     res.json({ success: true, data: result.data, total: result.total, page: Number(page) || 1, limit: limitNum });
 });
+exports.deleteWorker = (0, asyncHandler_1.asyncHandler)(async (req, res) => { const worker = await workerService.deleteWorkerService(req.params.id); res.json({ success: true, data: worker }); });

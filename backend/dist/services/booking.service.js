@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.swapBookingsService = exports.getReportBookingsService = exports.updateBookingDetailsService = exports.updateBookingStatus = exports.newBooking = exports.getAllbookings = void 0;
+exports.deleteBookingService = exports.swapBookingsService = exports.getReportBookingsService = exports.updateBookingDetailsService = exports.updateBookingStatus = exports.newBooking = exports.getAllbookings = void 0;
 const booking_dal_1 = require("../dal/booking.dal");
 const AppError_1 = require("../utils/AppError");
 const db_1 = require("../config/db");
@@ -84,9 +84,10 @@ const updateBookingDetailsService = async (id, updateData, userRole, userId) => 
     });
 };
 exports.updateBookingDetailsService = updateBookingDetailsService;
-const getReportBookingsService = async (year, month, search, limit, skip) => {
-    const startDate = new Date(year, month, 1);
-    const endDate = new Date(year, month + 1, 0, 23, 59, 59, 999);
+const getReportBookingsService = async (startDateStr, endDateStr, search, limit, skip) => {
+    const startDate = new Date(startDateStr);
+    const endDate = new Date(endDateStr);
+    endDate.setHours(23, 59, 59, 999);
     const { data, total, statsData } = await (0, booking_dal_1.getReportBookingsInDb)(startDate, endDate, search, skip, limit);
     const stats = {
         totalBookings: statsData.filter((b) => b.status !== "CANCELLED").length,
@@ -94,6 +95,11 @@ const getReportBookingsService = async (year, month, search, limit, skip) => {
         cancelled: statsData.filter((b) => b.status === "CANCELLED").length,
         totalMonks: statsData.filter((b) => b.status !== "CANCELLED").reduce((acc, b) => acc + (b.monksCount || 0), 0),
         totalGuests: statsData.filter((b) => b.status !== "CANCELLED").reduce((acc, b) => acc + (b.guestsCount || 0), 0),
+        totalWaiters: statsData.filter((b) => b.status !== "CANCELLED").reduce((acc, b) => acc + (b.waiters || 0), 0),
+        totalValet: statsData.filter((b) => b.status !== "CANCELLED").reduce((acc, b) => acc + (b.valetParking || 0), 0),
+        totalCoolers: statsData.filter((b) => b.status !== "CANCELLED").reduce((acc, b) => acc + (b.coolers || 0), 0),
+        totalGuards: statsData.filter((b) => b.status !== "CANCELLED").reduce((acc, b) => acc + (b.guards || 0), 0),
+        totalMasalchis: statsData.filter((b) => b.status !== "CANCELLED").reduce((acc, b) => acc + (b.masalchis || 0), 0),
     };
     return { data, total, stats };
 };
@@ -115,3 +121,8 @@ const swapBookingsService = async (dateStr, baseMealType, userId) => {
     ]);
 };
 exports.swapBookingsService = swapBookingsService;
+const deleteBookingService = async (id) => {
+    const { deleteBookingInDb } = require("../dal/booking.dal");
+    return await deleteBookingInDb(id);
+};
+exports.deleteBookingService = deleteBookingService;
