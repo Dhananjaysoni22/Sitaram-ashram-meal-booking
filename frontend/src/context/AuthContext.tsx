@@ -42,7 +42,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (token && user) {
       if (user.role === 'SUPER_ADMIN') {
         // SUPER_ADMIN has hardcoded full access
-        setAllowedScreens(['HOME', 'CALENDAR', 'NEW_BOOKING', 'REPORTS', 'ATTENDANCE', 'WORKERS', 'SETUP', 'STAFF']);
+        setAllowedScreens(['HOME', 'CALENDAR', 'NEW_BOOKING', 'REPORTS', 'ATTENDANCE', 'WORKERS', 'MANDIR_WORKERS', 'SETUP', 'STAFF']);
       } else {
         axiosClient.get('/permissions/my').then(res => {
           setAllowedScreens(res.data.data);
