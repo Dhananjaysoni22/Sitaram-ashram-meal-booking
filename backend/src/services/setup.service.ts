@@ -14,8 +14,8 @@ export const getOccasionsService = async () => getOccasions();
 export const createOccasionService = async (name: string) => createOccasion(name);
 export const deleteOccasionService = async (id: string) => deleteOccasion(id);
 
-export const getWorkerCategoriesService = async () => getWorkerCategories();
-export const createWorkerCategoryService = async (name: string) => createWorkerCategory(name);
+export const getWorkerCategoriesService = async (type: string = "ASHRAM") => getWorkerCategories(type);
+export const createWorkerCategoryService = async (name: string, type: string = "ASHRAM") => createWorkerCategory(name, type);
 export const deleteWorkerCategoryService = async (id: string) => deleteWorkerCategory(id);
 
 export const getRolesService = async () => getRoles();

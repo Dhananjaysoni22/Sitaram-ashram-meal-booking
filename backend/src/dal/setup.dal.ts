@@ -18,15 +18,15 @@ export const deleteOccasion = async (id: string) => {
   });
 };
 
-export const getWorkerCategories = async () => {
+export const getWorkerCategories = async (type: string = "ASHRAM") => {
   return await prisma.setupWorkerCategory.findMany({
-    where: { isActive: true },
+    where: { isActive: true, type },
     orderBy: { name: "asc" }
   });
 };
 
-export const createWorkerCategory = async (name: string) => {
-  return await prisma.setupWorkerCategory.create({ data: { name } });
+export const createWorkerCategory = async (name: string, type: string = "ASHRAM") => {
+  return await prisma.setupWorkerCategory.create({ data: { name, type } });
 };
 
 export const deleteWorkerCategory = async (id: string) => {

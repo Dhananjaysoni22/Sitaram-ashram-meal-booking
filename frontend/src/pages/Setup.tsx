@@ -20,10 +20,11 @@ import PermissionsMatrix from "../components/PermissionsMatrix";
 export default function Setup() {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<"occasions" | "categories" | "roles" | "permissions" | "festivals">("permissions");
+  const [activeTab, setActiveTab] = useState<"occasions" | "categories" | "mandirCategories" | "roles" | "permissions" | "festivals">("permissions");
 
   const [occasions, setOccasions] = useState<any[]>([]);
   const [categories, setCategories] = useState<any[]>([]);
+  const [mandirCategories, setMandirCategories] = useState<any[]>([]);
   const [roles, setRoles] = useState<any[]>([]);
   const [festivals, setFestivals] = useState<any[]>([]);
   
@@ -38,14 +39,16 @@ export default function Setup() {
 
   const fetchData = async () => {
     try {
-      const [occRes, catRes, roleRes, festRes] = await Promise.all([
+      const [occRes, catRes, mandirCatRes, roleRes, festRes] = await Promise.all([
         getOccasions(), 
-        getWorkerCategories(), 
+        getWorkerCategories("ASHRAM"), 
+        getWorkerCategories("MANDIR"),
         getRoles(),
         getAllFestivals()
       ]);
       setOccasions(occRes.data.data);
       setCategories(catRes.data.data);
+      setMandirCategories(mandirCatRes.data.data);
       setRoles(roleRes.data.data);
       setFestivals(festRes.data.data);
     } catch (e) {
@@ -64,7 +67,9 @@ export default function Setup() {
       if (activeTab === "occasions") {
         await createOccasion(newName);
       } else if (activeTab === "categories") {
-        await createWorkerCategory(newName);
+        await createWorkerCategory(newName, "ASHRAM");
+      } else if (activeTab === "mandirCategories") {
+        await createWorkerCategory(newName, "MANDIR");
       } else if (activeTab === "roles") {
         await createRole(newName);
       } else if (activeTab === "festivals") {

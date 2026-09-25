@@ -14,18 +14,19 @@ export default function Attendance() {
   const [workers, setWorkers] = useState<any[]>([]);
   const [attendanceRecords, setAttendanceRecords] = useState<any[]>([]);
   const [selectedDate, setSelectedDate] = useState(format(new Date(), "yyyy-MM-dd"));
+  const [activeTab, setActiveTab] = useState<"ASHRAM" | "MANDIR">("ASHRAM");
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchData();
-  }, [selectedDate]);
+  }, [selectedDate, activeTab]);
 
   const fetchData = async () => {
     setLoading(true);
     try {
       const [wRes, aRes] = await Promise.all([
-        getAllWorkers(),
+        getAllWorkers(activeTab),
         getAttendance(selectedDate)
       ]);
       setWorkers(wRes.data.data.filter((w: any) => w.isActive));

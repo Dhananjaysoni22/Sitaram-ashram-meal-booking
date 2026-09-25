@@ -1,7 +1,7 @@
 import axiosClient from "./axiosClient";
 
 // Workers
-export const getAllWorkers = () => axiosClient.get("/workers");
+export const getAllWorkers = (workerType: string = "ASHRAM") => axiosClient.get(`/workers?workerType=${workerType}`);
 export const createWorker = (data: any) => axiosClient.post("/workers", data);
 export const updateWorker = (id: string, data: any) => axiosClient.patch(`/workers/${id}`, data);
 export const deleteWorker = (id: string) => axiosClient.delete(`/workers/${id}`);
@@ -18,8 +18,8 @@ export const addPayment = (workerId: string, amount: number, paymentDate: string
   axiosClient.post("/workers/payments", { workerId, amount, paymentDate, notes });
 
 // Reports
-export const getMonthlyReport = (year: number, month: number, page?: number, limit?: number) => {
-  let url = `/workers/reports/monthly?year=${year}&month=${month}`;
+export const getMonthlyReport = (year: number, month: number, workerType: string = "ASHRAM", page?: number, limit?: number) => {
+  let url = `/workers/reports/monthly?year=${year}&month=${month}&workerType=${workerType}`;
   if (page) url += `&page=${page}`;
   if (limit) url += `&limit=${limit}`;
   return axiosClient.get(url);

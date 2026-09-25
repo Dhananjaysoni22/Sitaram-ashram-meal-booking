@@ -33,6 +33,7 @@ export default function Layout() {
     { id: "REPORTS", name: t("Reports"), path: "/reports", icon: FileText },
     { id: "ATTENDANCE", name: t("Attendance"), path: "/attendance", icon: UserCheck },
     { id: "WORKERS", name: t("Workers"), path: "/workers", icon: Users },
+    { id: "MANDIR_WORKERS", name: t("MandirWorkers", "Mandir Workers"), path: "/mandir-workers", icon: Users },
     { id: "STAFF", name: t("StaffManagement"), path: "/staff", icon: Users },
     { id: "SETUP", name: t("SystemSetup"), path: "/setup", icon: Settings },
   ];

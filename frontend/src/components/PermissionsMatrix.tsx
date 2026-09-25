@@ -10,6 +10,7 @@ const SCREENS = [
   "REPORTS",
   "ATTENDANCE",
   "WORKERS",
+  "MANDIR_WORKERS",
   "STAFF",
   "SETUP"
 ];

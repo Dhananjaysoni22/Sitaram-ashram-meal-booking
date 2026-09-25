@@ -7,7 +7,7 @@ import WorkerPaymentsModal from "../components/WorkerPaymentsModal";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
-export default function Workers() { // Ashram Workers
+export default function MandirWorkers() {
   const { user } = useAuth();
   const { t } = useTranslation();
   const navigate = useNavigate();

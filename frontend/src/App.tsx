@@ -8,6 +8,7 @@ import Login from './pages/Login';
 import StaffManagement from './pages/StaffManagement';
 import Reports from './pages/Reports';
 import Workers from './pages/Workers';
+import MandirWorkers from './pages/MandirWorkers';
 import Attendance from './pages/Attendance';
 import WorkerReports from './pages/WorkerReports';
 import Setup from './pages/Setup';

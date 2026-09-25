@@ -15,6 +15,7 @@ export default function WorkerReports() {
   const today = new Date();
   const [year, setYear] = useState(today.getFullYear());
   const [month, setMonth] = useState(today.getMonth()); // 0-11
+  const [activeTab, setActiveTab] = useState<"ASHRAM" | "MANDIR">("ASHRAM");
   
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(50);
@@ -22,17 +23,17 @@ export default function WorkerReports() {
 
   useEffect(() => {
     setLoading(true);
-    getMonthlyReport(year, month, page, limit).then(res => {
+    getMonthlyReport(year, month, activeTab, page, limit).then(res => {
       setReport(res.data.data);
       setTotal(res.data.total);
       setLoading(false);
     });
-  }, [year, month, page, limit]);
+  }, [year, month, activeTab, page, limit]);
 
   const monthName = format(new Date(2000, month, 1), "MMMM");
 
   const exportToExcel = async () => {
-    const res = await getMonthlyReport(year, month);
+    const res = await getMonthlyReport(year, month, activeTab);
     const fullReport = res.data.data;
     const data = fullReport.map((r: any) => ({
       [t("Name")]: r.worker.name,
