@@ -9,6 +9,7 @@ import {
 } from "../dal/booking.dal";
 import { AppError } from "../utils/AppError";
 import { prisma } from "../config/db";
+import { sendTelegramNotification } from "../utils/telegram";
 
 export const getAllbookings = async () => {
   return getAllBookings();
@@ -20,14 +21,27 @@ export const newBooking = async (data: Booking, userId: string) => {
   if (exisiting && exisiting.status !== "CANCELLED") {
     throw new AppError("Duplicate Booking", 400);
   }
-  return await createBookingInDb({ ...data, createdById: userId } as any);
+  const created = await createBookingInDb({ ...data, createdById: userId } as any);
+
+  // Telegram Notification
+  const msg = `🆕 <b>New Booking Alert!</b>\n\n👤 <b>Sponsor:</b> ${created.sponsorName}\n📅 <b>Date:</b> ${created.date.toISOString().split('T')[0]}\n🍽 <b>Meal:</b> ${created.mealType}\n👥 <b>People:</b> ${created.totalCount} (${created.guestsCount} Guests, ${created.monksCount} Monks)\n💵 <b>Advance:</b> ₹${created.advanceAmount || 0} ${created.paymentMethod ? '(' + created.paymentMethod + ')' : ''}\n📝 <b>Instructions:</b> ${created.specialInstructions || 'None'}`;
+  sendTelegramNotification(msg);
+
+  return created;
 };
 
 export const updateBookingStatus = async (
   id: string,
   status: BookingStatusType,
 ) => {
-  return await updateBookingStatusInDb(id, status);
+  const updated = await updateBookingStatusInDb(id, status);
+  
+  if (status === "CANCELLED") {
+    const msg = `❌ <b>Booking Cancelled!</b>\n\n👤 <b>Sponsor:</b> ${updated.sponsorName}\n📅 <b>Date:</b> ${updated.date.toISOString().split('T')[0]}\n🍽 <b>Meal:</b> ${updated.mealType}`;
+    sendTelegramNotification(msg);
+  }
+  
+  return updated;
 };
 
 export const updateBookingDetailsService = async (id: string, updateData: any, userRole: string, userId: string) => {
